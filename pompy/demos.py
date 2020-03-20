@@ -62,7 +62,7 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
     for t in np.arange(0, 10, dt):
         wind_model.update(dt)
     plume_model = models.PlumeModel(
-        sim_region, (15., 0., 0.), wind_model, rng=rng)
+        sim_region, (50., 0., 0.), wind_model, rng=rng)
     fig, ax, title = set_up_figure()
     vf_plot = plt.quiver(
         wind_model.x_points, wind_model.y_points,

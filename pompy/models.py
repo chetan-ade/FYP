@@ -132,12 +132,6 @@ class WindModel(object):
         self.n_y = n_y
         self.k_x = k_x
         self.k_y = k_y
-
-        self.magnitude = 1
-        self.angle = 0
-        self.newU = 0
-        self.newV = 0
-
         self.noise_gen = ColouredNoiseGenerator(
             np.zeros((2, 8)), noise_damp, noise_bandwidth, noise_gain,
             use_original_noise_updates, rng)
@@ -153,6 +147,22 @@ class WindModel(object):
         self._x_points = np.linspace(sim_region.x_min, sim_region.x_max, n_x)
         self._y_points = np.linspace(sim_region.y_min, sim_region.y_max, n_y)
         self._interp_set = True
+
+        # OUR VARIABLES
+        self.counter = 0
+        self.magnitude = 1
+        self.angle = 0
+        self.newU = 0
+        self.newV = 0
+        self.array = [90, 45, 15, 90, 150, 180, 150, 90]
+        self.newArray = []
+        for i in range(len(self.array)-1):
+            self.newArray.append(self.array[i])
+            self.diff = self.array[i+1] - self.array[i]
+            self.diff = self.diff/600
+            for j in range(1, 600):
+                self.newArray.append(self.array[i]+self.diff*j)
+        self.newArray.append(self.array[-1])
 
     def _set_interpolators(self):
         self._interp_u = interp.RectBivariateSpline(
@@ -189,11 +199,13 @@ class WindModel(object):
                  0.5 * self.k_x * d2u_dx2 + 0.5 * self.k_y * d2u_dy2)
         dv_dt = (-self._u_int * dv_dx - self._v_int * dv_dy +
                  0.5 * self.k_x * d2v_dx2 + 0.5 * self.k_y * d2v_dy2)
-        self.angle = ((self.angle+0.1) % 360)
+        # self.angle = ((self.angle+0.1) % 360)
+        self.angle = self.newArray[self.counter]
         self.newU = self.magnitude*math.cos(self.angle * (math.pi/180))
         self.newV = self.magnitude*math.sin(self.angle * (math.pi/180))
         self.du = self.newU - self._u_int[0][0]
         self.dv = self.newV - self._v_int[0][0]
+        self.counter += 1
         self._u_int += self.du
         self._v_int += self.dv
         self._interp_set = False
