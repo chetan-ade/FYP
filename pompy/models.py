@@ -6,7 +6,7 @@ from __future__ import division
 __authors__ = 'Matt Graham'
 __license__ = 'MIT'
 
-
+import math
 import numpy as np
 import scipy.interpolate as interp
 
@@ -292,7 +292,7 @@ class WindModel(object):
     over the edges.
     """
 
-    def __init__(self, sim_region=None, n_x=21, n_y=21, u_av=1., v_av=0.,
+    def __init__(self, sim_region=None, n_x=21, n_y=21, u_av=0., v_av=0.,
                  k_x=20., k_y=20., noise_gain=2., noise_damp=0.1,
                  noise_bandwidth=0.2, use_original_noise_updates=False,
                  rng=None):
@@ -344,10 +344,16 @@ class WindModel(object):
         self.sim_region = sim_region
         self.u_av = u_av
         self.v_av = v_av
+        print("u_av: \n", self.u_av)
+        print("v_av: \n", self.v_av)
         self.n_x = n_x
         self.n_y = n_y
         self.k_x = k_x
         self.k_y = k_y
+
+        self.magnitude = 1
+        self.angle = 0
+
         # set coloured noise generator for applying boundary condition
         # need to generate coloured noise samples at four corners of boundary
         # for both components of the wind velocity field so (2,8) state
@@ -362,12 +368,17 @@ class WindModel(object):
         # +2s are to account for boundary grid points
         self._u = np.ones((n_x + 2, n_y + 2)) * u_av
         self._v = np.ones((n_x + 2, n_y + 2)) * v_av
+        print("_u: \n", self._u)
+        print("_v: \n", self._v)
         # create views on to field interiors (i.e. not including boundaries)
         # for notational ease - note this does not copy any data
         self._u_int = self._u[1:-1, 1:-1]
         self._v_int = self._v[1:-1, 1:-1]
+        print("_u_int: \n", self._u_int)
+        print("_v_int: \n", self._v_int)
         # preassign array of corner means values
         self._corner_means = np.array([u_av, v_av]).repeat(4)
+        print("_corner_means:", self._corner_means)
         # precompute linear ramp arrays with size of boundary edges for
         # linear interpolation of corner values
         self._ramp_x = np.linspace(0., 1., n_x + 2)
@@ -460,10 +471,22 @@ class WindModel(object):
         dv_dt = (-self._u_int * dv_dx - self._v_int * dv_dy +
                  0.5 * self.k_x * d2v_dx2 + 0.5 * self.k_y * d2v_dy2)
         # perform update with Euler integration
-        self._u_int += du_dt * dt
-        self._v_int += dv_dt * dt
-        print(self._u_int)
-        print(self._v_int)
+
+        # self._u_int += du_dt * dt
+        # self._v_int += dv_dt * dt
+
+        self._u_int += -1
+        self._v_int += 0
+        print("U:", self._u_int[0][0])
+        print("V:", self._v_int[0][0])
+        print("Magnitude:", (self._u_int[0][0]**2 + self._v_int[0][0]**2)**0.5)
+        print("Angle:", math.degrees(
+            math.atan(self._v_int[0][0]/self._u_int[0][0])))
+        input()
+        # print("self._u_int: \n", self._u_int)
+        # print("self._v_int: \n", self._v_int)
+        # input()
+
         # set flag to indicate interpolators no longer valid as fields updated
         self._interp_set = False
 
