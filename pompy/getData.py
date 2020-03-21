@@ -4,6 +4,7 @@ import requests
 import datetime
 from datetime import date
 from wwo_hist import retrieve_hist_data
+import csv
 
 api_key = '91a5c7d65b78493086651634202801'
 start_date = '01-JUL-2008'
@@ -27,7 +28,7 @@ params = {
 
 def getHistoricalData(location, start_date, end_date):
     hist_weather_data = retrieve_hist_data(api_key, [
-                                           location], start_date, end_date, frequency, location_label=False, export_csv=False, store_df=True)
+                                           location], start_date, end_date, frequency, location_label=False, export_csv=True, store_df=False)
 
 
 def getPredictedData(location):
@@ -47,4 +48,64 @@ def getPredictedData(location):
     return (apiList, location)
 
 
-# getHistoricalData('Mumbai', '01-JAN-2020', '16-JAN-2020')
+def getData(location, startDate):
+    today = datetime.datetime.today()
+    apiList = []
+    fileCreated = False
+    diff = today.date()-startDate.date()
+    if (startDate.date() == today.date()):
+        apiList, tempLocation = getPredictedData(location)
+    elif(diff >= datetime.timedelta(days=15)):
+        startDateStr = startDate.strftime("%d-%b-%Y").upper()
+        endDate = startDate + datetime.timedelta(days=16)
+        endDateStr = endDate.strftime("%d-%b-%Y").upper()
+        getHistoricalData(location, startDateStr, endDateStr)
+
+        csvList = []
+        filename = location+".csv"
+        with open(filename, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                csvList.append(row)
+        csvList = csvList[1:17]
+        for i in csvList:
+            curDate = i[0]
+            curDir = i[-2]
+            curSpd = i[-1]
+            element = {'Date': curDate, 'Direction': curDir, 'Speed': curSpd}
+            apiList.append(element)
+        fileCreated = True
+    else:
+        startDateStr = startDate.strftime("%d-%b-%Y").upper()
+        endDate = datetime.datetime.today()
+        endDateStr = endDate.strftime("%d-%b-%Y").upper()
+        getHistoricalData(location, startDateStr, endDateStr)
+        csvList = []
+        filename = location+".csv"
+        with open(filename, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                csvList.append(row)
+        csvList = csvList[1:((endDate-startDate).days)+1]
+        for i in csvList:
+            curDate = i[0]
+            curDir = i[-2]
+            curSpd = i[-1]
+            element = {'Date': curDate, 'Direction': curDir, 'Speed': curSpd}
+            apiList.append(element)
+        tempList, tempLoc = getPredictedData(location)
+        apiList.extend(tempList)
+        apiList = apiList[:16]
+        fileCreated = True
+    if fileCreated:
+        filename = location+".csv"
+        os.remove(filename)
+    return(apiList, location)
+
+
+# apiList, location = getData('19.0368,73.0158', datetime.datetime(2018, 3, 6))
+# apiList, location = getData('19.0368,73.0158', datetime.datetime(2020, 3, 21))
+apiList, location = getData('19.0368,73.0158', datetime.datetime(2020, 3, 15))
+for i in apiList:
+    print(i)
+print(location)

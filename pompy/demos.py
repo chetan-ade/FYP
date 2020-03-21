@@ -32,18 +32,19 @@ def update_decorator(dt, title, steps_per_frame, models):
 
 def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
                      seed=DEFAULT_SEED):
-    # apiList, location = getData.getPredictedData('19.0368,73.0158')
-    # array = []
-    # speedArray = []
-    # dateArray = []
-    # for i in apiList:
-    #     array.append(int(i['Direction']))
-    #     speedArray.append(int(i['Speed']))
-    #     d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
-    #     dateArray.append(d.strftime('%b %d,%Y'))
-    # print("Demo: Dir", array)
-    # print("Demo: Spd", speedArray)
-    # print("Demo: Dte", dateArray)
+    apiList, location = getData.getData(
+        '19.0368,73.0158', datetime.datetime(2020, 3, 15))
+    array = []
+    speedArray = []
+    dateArray = []
+    for i in apiList:
+        array.append(int(i['Direction']))
+        speedArray.append(int(i['Speed']))
+        d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
+        dateArray.append(d.strftime('%b %d,%Y'))
+    print("Demo: Dir", array)
+    print("Demo: Spd", speedArray)
+    print("Demo: Dte", dateArray)
 
     # array = [200, 192, 185, 213, 189, 194, 218,
     #          144, 180, 187, 246, 179, 255, 237, 199, 241]
@@ -51,9 +52,10 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
     # dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
     #              'Apr 04,2020', 'Apr 05,2020']
 
-    array = [200, 192, 185]
-    speedArray = [8, 10, 9]
-    dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020']
+    # array = [200, 192, 185]
+    # speedArray = [8, 10, 9]
+    # dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020']
+
     rng = np.random.RandomState(seed)
     sim_region = models.Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
     wind_model = models.WindModel(
