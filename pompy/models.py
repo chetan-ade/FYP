@@ -117,7 +117,7 @@ class WindModel(object):
     def __init__(self, sim_region=None, n_x=21, n_y=21, u_av=1., v_av=0.,
                  k_x=20., k_y=20., noise_gain=2., noise_damp=0.1,
                  noise_bandwidth=0.2, use_original_noise_updates=False,
-                 rng=None, DirArray=[], SpdArray=[]):
+                 rng=None, DirArray=[], SpdArray=[], dateArray=[]):
         if sim_region is None:
             sim_region = Rectangle(0, 100, -50, 50)
         if rng is None:
@@ -151,6 +151,8 @@ class WindModel(object):
         self.day = ""
         self.array = DirArray
         self.speedArray = SpdArray
+        self.dateArray = dateArray
+        # print(self.dateArray)
         self.minSpeed = min(self.speedArray)
         self.speedArray = [i/self.minSpeed for i in self.speedArray]
         # print(self.speedArray)
@@ -219,7 +221,8 @@ class WindModel(object):
         self.du = self.newU - self._u_int[0][0]
         self.dv = self.newV - self._v_int[0][0]
         self.counter += 1
-        self.day = "DAY "+str(self.counter//600)  # print(self.day)
+        # self.day = "DAY "+str(self.counter//600)  # print(self.day)
+        self.day = self.dateArray[self.counter//600]
         self._u_int += self.du
         self._v_int += self.dv
         self._interp_set = False

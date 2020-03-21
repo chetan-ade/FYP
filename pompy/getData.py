@@ -5,9 +5,6 @@ import datetime
 from datetime import date
 from wwo_hist import retrieve_hist_data
 
-# PATH TO SAVE CSV FILE
-# os.chdir("/content")
-
 api_key = '91a5c7d65b78493086651634202801'
 start_date = '01-JUL-2008'
 end_date = date.today().strftime("%d-%b-%Y").upper()
@@ -47,34 +44,4 @@ def getPredictedData(location):
         curSpd = dataJson['data']['weather'][0]['hourly'][0]['windspeedKmph']
         element = {'Date': curDate, 'Direction': curDir, 'Speed': curSpd}
         apiList.append(element)
-    # print(location)
-    # print(apiList)
     return (apiList, location)
-
-
-def listToCSV(dataList, csv_file):
-    csv_columns = ['Date', 'Direction', 'Speed']
-    # csv_file = "PredictedFromAPI.csv"
-    try:
-        with open(csv_file, 'w') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
-            writer.writeheader()
-            for data in dataList:
-                writer.writerow(data)
-    except IOError:
-        print("Error while creating", csv_file)
-
-
-def createWindList(apiList, modelList):
-    windList = []
-    for i in range(len(apiList)):
-        Date = apiList[i]['Date']
-        Direction = (int(apiList[i]['Direction']) +
-                     int(modelList[i]['Direction']))/2
-        Speed = (int(apiList[i]['Speed']) + int(modelList[i]['Speed']))/2
-        windList.append({'Date': Date, 'Direction': str(
-            Direction), 'Speed': str(Speed)})
-    print(windList)
-
-
-# apiList, location = getPredictedData('19.0368,73.0158')

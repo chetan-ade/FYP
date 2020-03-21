@@ -1,4 +1,3 @@
-from __future__ import division
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -7,6 +6,7 @@ import numpy as np
 import models
 import processors
 import getData
+import datetime
 
 DEFAULT_SEED = 20181108
 
@@ -60,17 +60,22 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
     # apiList, location = getData.getPredictedData('19.0368,73.0158')
     # array = []
     # speedArray = []
+    # dateArray = []
     # for i in apiList:
     #     array.append(int(i['Direction']))
     #     speedArray.append(int(i['Speed']))
+    #     d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
+    #     dateArray.append(d.strftime('%b %d,%Y'))
 
     array = [200, 192, 185, 213, 189, 194, 218,
              144, 180, 187, 246, 179, 255, 237, 199, 241]
     speedArray = [8, 10, 9, 9, 12, 8, 10, 9, 8, 9, 10, 10, 12, 12, 8, 9]
+    dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
+                 'Apr 04,2020', 'Apr 05,2020']
     rng = np.random.RandomState(seed)
     sim_region = models.Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
     wind_model = models.WindModel(
-        sim_region, 21, 11, rng=rng, DirArray=array, SpdArray=speedArray)
+        sim_region, 21, 11, rng=rng, DirArray=array, SpdArray=speedArray, dateArray=dateArray)
     for t in np.arange(0, 10, dt):
         wind_model.update(dt)
     plume_model = models.PlumeModel(
