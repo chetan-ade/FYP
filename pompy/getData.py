@@ -47,4 +47,4 @@ def getPredictedData(location):
     return (apiList, location)
 
 
-getHistoricalData('Mumbai', '01-JAN-2020', '16-JAN-2020')
+# getHistoricalData('Mumbai', '01-JAN-2020', '16-JAN-2020')

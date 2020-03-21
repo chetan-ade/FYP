@@ -30,45 +30,20 @@ def update_decorator(dt, title, steps_per_frame, models):
     return inner_decorator
 
 
-# def wind_model_demo(dt=0.01, t_max=100, steps_per_frame=20, seed=DEFAULT_SEED):
-#     rng = np.random.RandomState(seed)
-#     wind_region = models.Rectangle(x_min=0., x_max=100., y_min=-25., y_max=25.)
-#     wind_model = models.WindModel(wind_region, 21, 11, rng=rng)
-#     for t in np.arange(0, 10, dt):
-#         wind_model.update(dt)
-#     fig, ax, title = set_up_figure()
-#     vf_plot = ax.quiver(wind_model.x_points, wind_model.y_points,
-#                         wind_model.velocity_field.T[0],
-#                         wind_model.velocity_field.T[1], width=0.003)
-#     ax.axis(ax.axis() + np.array([-0.25, 0.25, -0.25, 0.25]))
-#     ax.set_xlabel('x-coordinate / m')
-#     ax.set_ylabel('y-coordinate / m')
-#     ax.set_aspect(1)
-#     fig.tight_layout()
-#     @update_decorator(dt, title, steps_per_frame, [wind_model])
-#     def update(i):
-#         vf_plot.set_UVC(
-#             wind_model.velocity_field.T[0], wind_model.velocity_field.T[1])
-#         return [vf_plot]
-#     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
-#     anim = FuncAnimation(fig, update, n_frame, blit=True)
-#     return fig, ax, anim
-
-
 def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
                      seed=DEFAULT_SEED):
-    apiList, location = getData.getPredictedData('19.0368,73.0158')
-    array = []
-    speedArray = []
-    dateArray = []
-    for i in apiList:
-        array.append(int(i['Direction']))
-        speedArray.append(int(i['Speed']))
-        d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
-        dateArray.append(d.strftime('%b %d,%Y'))
-    print(array)
-    print(speedArray)
-    print(dateArray)
+    # apiList, location = getData.getPredictedData('19.0368,73.0158')
+    # array = []
+    # speedArray = []
+    # dateArray = []
+    # for i in apiList:
+    #     array.append(int(i['Direction']))
+    #     speedArray.append(int(i['Speed']))
+    #     d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
+    #     dateArray.append(d.strftime('%b %d,%Y'))
+    # print("Demo: Dir", array)
+    # print("Demo: Spd", speedArray)
+    # print("Demo: Dte", dateArray)
 
     # array = [200, 192, 185, 213, 189, 194, 218,
     #          144, 180, 187, 246, 179, 255, 237, 199, 241]
@@ -83,8 +58,6 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
     sim_region = models.Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
     wind_model = models.WindModel(
         sim_region, 21, 11, rng=rng, DirArray=array, SpdArray=speedArray, dateArray=dateArray)
-    for t in np.arange(0, 10, dt):
-        wind_model.update(dt)
     plume_model = models.PlumeModel(
         sim_region, (50., 0., 0.), wind_model, rng=rng)
     fig, ax, title = set_up_figure()
@@ -92,8 +65,7 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
         wind_model.x_points, wind_model.y_points,
         wind_model.velocity_field.T[0], wind_model.velocity_field.T[1],
         width=0.000000000001)
-    # width = 0.003 for normal arrows
-    # width = 0.000000000001 for jhugaad
+    # width = 0.003 for normal arrows, width = 0.000000000001 for jhugaad
     ax.axis(ax.axis() + np.array([-0.25, 0.25, -0.25, 0.25]))
     radius_mult = 200
     pp_plot = plt.scatter(
@@ -114,15 +86,14 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
         pp_plot.set_offsets(plume_model.puff_array[:, :2])
         pp_plot._sizes = radius_mult * plume_model.puff_array[:, 3]**0.5
         dayText.set_text(wind_model.day)
-        # print(wind_model.day)
         if(wind_model.counter > len(wind_model.newArray)):
             anim.event_source.stop()
         return [vf_plot, pp_plot, dayText]
 
     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
+    # anim.save('plume.html', dpi=100, fps=20, extra_args=['-vcodec', 'libx264'])
     return fig, ax, anim
-
 
 # def conc_point_val_demo(dt=0.01, t_max=5, steps_per_frame=1, x=10., y=0.0,
 #                         seed=DEFAULT_SEED):
@@ -159,38 +130,6 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
 #     return fig, ax, anim
 
 
-# def concentration_array_demo(dt=0.03, t_max=100, steps_per_frame=20,
-#                              seed=DEFAULT_SEED):
-#     rng = np.random.RandomState(seed)
-#     sim_region = models.Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
-#     wind_model = models.WindModel(sim_region, 21, 11, rng=rng)
-#     plume_model = models.PlumeModel(
-#         sim_region, (50., 0., 0.), wind_model, rng=rng)
-#     for t in np.arange(0, 10, dt):
-#         wind_model.update(dt)
-#         plume_model.update(dt)
-#     array_gen = processors.ConcentrationArrayGenerator(
-#         sim_region, 0.01, 500, 250, 1.)
-#     fig, ax, title = set_up_figure()
-#     conc_array = array_gen.generate_single_array(plume_model.puff_array)
-#     conc_im = plt.imshow(conc_array.T, extent=sim_region, cmap='Reds',
-#                          vmin=0., vmax=1.)
-#     ax.set_xlabel('x-coordinate / m')
-#     ax.set_ylabel('y-coordinate / m')
-#     ax.set_aspect(1)
-#     fig.tight_layout()
-#     @update_decorator(dt, title, steps_per_frame, [wind_model, plume_model])
-#     def update(i):
-#         conc_im.set_data(
-#             array_gen.generate_single_array(plume_model.puff_array).T)
-#         return [conc_im]
-#     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
-#     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
-#     return fig, ax, anim
-
-
-# fig, ax, anim = wind_model_demo()
 fig, ax, anim = plume_model_demo()
 # fig, ax, anim = conc_point_val_demo()
-# fig, ax, anim = concentration_array_demo()
 plt.show()
