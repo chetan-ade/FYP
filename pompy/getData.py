@@ -25,9 +25,9 @@ params = {
 }
 
 
-def getHistoricalData(location):
+def getHistoricalData(location, start_date, end_date):
     hist_weather_data = retrieve_hist_data(api_key, [
-                                           location], start_date, end_date, frequency, location_label=False, export_csv=True, store_df=False)
+                                           location], start_date, end_date, frequency, location_label=False, export_csv=False, store_df=True)
 
 
 def getPredictedData(location):
@@ -45,3 +45,6 @@ def getPredictedData(location):
         element = {'Date': curDate, 'Direction': curDir, 'Speed': curSpd}
         apiList.append(element)
     return (apiList, location)
+
+
+getHistoricalData('Mumbai', '01-JAN-2020', '16-JAN-2020')

@@ -192,8 +192,8 @@ class WindModel(object):
                 self.temp = self.dateArray[i]+" "+str(j)+":00:00"
                 self.newDateArray.append(self.temp)
         self.newDateArray.append(self.newDateArray[-1])
-        for l in self.newDateArray:
-            print(l)
+        # for l in self.newDateArray:
+        #     print(l)
 
     def _set_interpolators(self):
         self._interp_u = interp.RectBivariateSpline(

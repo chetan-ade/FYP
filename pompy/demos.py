@@ -57,15 +57,18 @@ def update_decorator(dt, title, steps_per_frame, models):
 
 def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
                      seed=DEFAULT_SEED):
-    # apiList, location = getData.getPredictedData('19.0368,73.0158')
-    # array = []
-    # speedArray = []
-    # dateArray = []
-    # for i in apiList:
-    #     array.append(int(i['Direction']))
-    #     speedArray.append(int(i['Speed']))
-    #     d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
-    #     dateArray.append(d.strftime('%b %d,%Y'))
+    apiList, location = getData.getPredictedData('19.0368,73.0158')
+    array = []
+    speedArray = []
+    dateArray = []
+    for i in apiList:
+        array.append(int(i['Direction']))
+        speedArray.append(int(i['Speed']))
+        d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
+        dateArray.append(d.strftime('%b %d,%Y'))
+    print(array)
+    print(speedArray)
+    print(dateArray)
 
     # array = [200, 192, 185, 213, 189, 194, 218,
     #          144, 180, 187, 246, 179, 255, 237, 199, 241]
