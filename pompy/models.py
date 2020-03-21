@@ -1,4 +1,3 @@
-from __future__ import division
 import math
 import numpy as np
 import scipy.interpolate as interp
@@ -19,11 +18,9 @@ class SlottedIterable(object):
 
 
 class Puff(SlottedIterable):
-
     __slots__ = ('x', 'y', 'z', 'r_sq')
 
     def __init__(self, x, y, z, r_sq):
-
         assert r_sq >= 0., 'r_sq must be non-negative.'
         self.x = x
         self.y = y
@@ -120,7 +117,7 @@ class WindModel(object):
     def __init__(self, sim_region=None, n_x=21, n_y=21, u_av=1., v_av=0.,
                  k_x=20., k_y=20., noise_gain=2., noise_damp=0.1,
                  noise_bandwidth=0.2, use_original_noise_updates=False,
-                 rng=None):
+                 rng=None, DirArray=[], SpdArray=[]):
         if sim_region is None:
             sim_region = Rectangle(0, 100, -50, 50)
         if rng is None:
@@ -141,9 +138,6 @@ class WindModel(object):
         self._v = np.ones((n_x + 2, n_y + 2)) * v_av
         self._u_int = self._u[1:-1, 1:-1]
         self._v_int = self._v[1:-1, 1:-1]
-        self._corner_means = np.array([u_av, v_av]).repeat(4)
-        self._ramp_x = np.linspace(0., 1., n_x + 2)
-        self._ramp_y = np.linspace(0., 1., n_y + 2)
         self._x_points = np.linspace(sim_region.x_min, sim_region.x_max, n_x)
         self._y_points = np.linspace(sim_region.y_min, sim_region.y_max, n_y)
         self._interp_set = True
@@ -154,8 +148,12 @@ class WindModel(object):
         self.angle = 0
         self.newU = 0
         self.newV = 0
-
-        self.array = [10, 170, 10, 250, 10, 350]
+        self.day = ""
+        self.array = DirArray
+        self.speedArray = SpdArray
+        self.minSpeed = min(self.speedArray)
+        self.speedArray = [i/self.minSpeed for i in self.speedArray]
+        # print(self.speedArray)
         self.newArray = []
         for i in range(len(self.array)-1):
             self.newArray.append(self.array[i])
@@ -175,6 +173,15 @@ class WindModel(object):
                     self.temp -= 360
                 self.newArray.append(self.temp)
         self.newArray.append(self.array[-1])
+        self.newSpeedArray = []
+        for i in range(len(self.speedArray)-1):
+            self.newSpeedArray.append(self.speedArray[i])
+            self.diff = self.speedArray[i+1] - self.speedArray[i]
+            self.diff = self.diff/600
+            for j in range(1, 600):
+                self.temp = self.speedArray[i]+self.diff*j
+                self.newSpeedArray.append(self.temp)
+        self.newSpeedArray.append(self.speedArray[-1])
 
     def _set_interpolators(self):
         self._interp_u = interp.RectBivariateSpline(
@@ -202,18 +209,9 @@ class WindModel(object):
                          float(self._interp_v(x, y))])
 
     def update(self, dt):
-        self._apply_boundary_conditions(dt)
-        du_dx, du_dy = self._centred_first_diffs(self._u)
-        dv_dx, dv_dy = self._centred_first_diffs(self._v)
-        d2u_dx2, d2u_dy2 = self._centred_second_diffs(self._u)
-        d2v_dx2, d2v_dy2 = self._centred_second_diffs(self._v)
-        du_dt = (-self._u_int * du_dx - self._v_int * du_dy +
-                 0.5 * self.k_x * d2u_dx2 + 0.5 * self.k_y * d2u_dy2)
-        dv_dt = (-self._u_int * dv_dx - self._v_int * dv_dy +
-                 0.5 * self.k_x * d2v_dx2 + 0.5 * self.k_y * d2v_dy2)
-        # self.angle = ((self.angle+0.1) % 360)
         try:
             self.angle = self.newArray[self.counter]
+            self.magnitude = self.newSpeedArray[self.counter]
         except IndexError:
             pass
         self.newU = self.magnitude*math.cos(self.angle * (math.pi/180))
@@ -221,31 +219,10 @@ class WindModel(object):
         self.du = self.newU - self._u_int[0][0]
         self.dv = self.newV - self._v_int[0][0]
         self.counter += 1
+        self.day = "DAY "+str(self.counter//600)  # print(self.day)
         self._u_int += self.du
         self._v_int += self.dv
         self._interp_set = False
-
-    def _apply_boundary_conditions(self, dt):
-        self.noise_gen.update(dt)
-        (u_tl, u_tr, u_bl, u_br, v_tl, v_tr, v_bl, v_br) = (
-            self.noise_gen.output + self._corner_means)
-        self._u[:, 0] = u_tl + self._ramp_x * (u_tr - u_tl)
-        self._u[:, -1] = u_bl + self._ramp_x * (u_br - u_bl)
-        self._u[0, :] = u_tl + self._ramp_y * (u_bl - u_tl)
-        self._u[-1, :] = u_tr + self._ramp_y * (u_br - u_tr)
-        self._v[:, 0] = v_tl + self._ramp_x * (v_tr - v_tl)
-        self._v[:, -1] = v_bl + self._ramp_x * (v_br - v_bl)
-        self._v[0, :] = v_tl + self._ramp_y * (v_bl - v_tl)
-        self._v[-1, :] = v_tr + self._ramp_y * (v_br - v_tr)
-
-    def _centred_first_diffs(self, f):
-        return ((f[2:, 1:-1] - f[0:-2, 1:-1]) / (2 * self.dx),
-                (f[1:-1, 2:] - f[1:-1, 0:-2]) / (2 * self.dy))
-
-    def _centred_second_diffs(self, f):
-        return (
-            (f[2:, 1:-1] - 2 * f[1:-1, 1:-1] + f[0:-2, 1:-1]) / self.dx**2,
-            (f[1:-1, 2:] - 2 * f[1:-1, 1:-1] + f[1:-1, 0:-2]) / self.dy**2)
 
 
 class ColouredNoiseGenerator(object):
