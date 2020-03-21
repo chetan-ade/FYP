@@ -1,17 +1,17 @@
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from matplotlib.animation import FuncAnimation
+from matplotlib.animation import FuncAnimation, PillowWriter
 import numpy as np
 import models
 import processors
 import getData
 import datetime
-import matplotlib.animation
-# import matplotlib
-# matplotlib.use("Agg")
-# Writer = animations.FFMpegWriter()
-# writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+# import matplotlib.animation as animations
+import matplotlib
+
+# Writer = animations.MovieWriter(fps=12, bitrate=1800, extra_args=['-vcodec', 'libx264'])
+# writer = Writer(fps=15, bitrate=1800)
 
 DEFAULT_SEED = 20181108
 
@@ -19,6 +19,7 @@ DEFAULT_SEED = 20181108
 def set_up_figure(fig_size=(10, 5)):
     fig, ax = plt.subplots(1, 1, figsize=fig_size)
     title = ax.set_title('')
+    # fig.axis('off')         # remove axes from plot
     return fig, ax, title
 
 
@@ -100,7 +101,9 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
     # anim.save('plume.mp4', dpi=100, fps=20, extra_args=['-vcodec', 'libx264'])
-    # anim.save("plume.html")
+    anim.save("plume.gif", PillowWriter(fps=15, bitrate=1800))      # GIF
+    # with Writer.saving('plume.mp4'):
+    #     Writer.grab_frame()
     return fig, ax, anim
 
 # def conc_point_val_demo(dt=0.01, t_max=5, steps_per_frame=1, x=10., y=0.0,
