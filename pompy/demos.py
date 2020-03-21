@@ -67,11 +67,15 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
     #     d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
     #     dateArray.append(d.strftime('%b %d,%Y'))
 
-    array = [200, 192, 185, 213, 189, 194, 218,
-             144, 180, 187, 246, 179, 255, 237, 199, 241]
-    speedArray = [8, 10, 9, 9, 12, 8, 10, 9, 8, 9, 10, 10, 12, 12, 8, 9]
-    dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
-                 'Apr 04,2020', 'Apr 05,2020']
+    # array = [200, 192, 185, 213, 189, 194, 218,
+    #          144, 180, 187, 246, 179, 255, 237, 199, 241]
+    # speedArray = [8, 10, 9, 9, 12, 8, 10, 9, 8, 9, 10, 10, 12, 12, 8, 9]
+    # dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
+    #              'Apr 04,2020', 'Apr 05,2020']
+
+    array = [200, 192, 185]
+    speedArray = [8, 10, 9]
+    dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020']
     rng = np.random.RandomState(seed)
     sim_region = models.Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
     wind_model = models.WindModel(
@@ -96,7 +100,8 @@ def plume_model_demo(dt=0.03, t_max=100, steps_per_frame=20,
     # c = color
     ax.set_xlabel('x-coordinate / m')
     ax.set_ylabel('y-coordinate / m')
-    dayText = ax.text(99, 25, "DAY ")
+    # dayText = ax.text(99, 25, "DAY ")
+    dayText = ax.text(90, 25, "DateTime")
     ax.set_aspect(1)
     fig.tight_layout()
     @update_decorator(dt, title, steps_per_frame, [wind_model, plume_model])
