@@ -101,11 +101,3 @@ def getData(location, startDate):
         filename = location+".csv"
         os.remove(filename)
     return(apiList, location)
-
-
-# apiList, location = getData('19.0368,73.0158', datetime.datetime(2018, 3, 6))
-# apiList, location = getData('19.0368,73.0158', datetime.datetime(2020, 3, 21))
-# apiList, location = getData('19.0368,73.0158', datetime.datetime(2020, 3, 15))
-# for i in apiList:
-#     print(i)
-# print(location)

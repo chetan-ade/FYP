@@ -183,7 +183,7 @@ class WindModel(object):
                 self.newSpeedArray.append(self.temp)
         self.newSpeedArray.append(self.speedArray[-1])
         self.newDateArray = []
-        for i in range(len(self.dateArray)-1):
+        for i in range(len(self.dateArray)):
             self.newDateArray.append(self.dateArray[i]+" 00:00:00")
             for j in range(1, 10):
                 self.temp = self.dateArray[i]+" 0"+str(j)+":00:00"
@@ -191,9 +191,6 @@ class WindModel(object):
             for j in range(10, 24):
                 self.temp = self.dateArray[i]+" "+str(j)+":00:00"
                 self.newDateArray.append(self.temp)
-        self.newDateArray.append(self.newDateArray[-1])
-        # for l in self.newDateArray:
-        #     print(l)
 
     def _set_interpolators(self):
         self._interp_u = interp.RectBivariateSpline(
@@ -231,7 +228,6 @@ class WindModel(object):
         self.du = self.newU - self._u_int[0][0]
         self.dv = self.newV - self._v_int[0][0]
         self.counter += 1
-        # self.day = "DAY "+str(self.counter//600)  # print(self.day)
         try:
             self.day = self.newDateArray[self.counter//25]
         except IndexError:
