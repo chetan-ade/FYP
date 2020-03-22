@@ -1,15 +1,13 @@
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from matplotlib.animation import FuncAnimation, writers
+from matplotlib.animation import FuncAnimation, PillowWriter
 import numpy as np
 import models
 import processors
 import getData
 import datetime
-
-Writer = writers['ffmpeg']
-writer = Writer(fps=15, bitrate=1800)
+import matplotlib
 
 DEFAULT_SEED = 20181108
 
@@ -38,7 +36,7 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
                      seed=DEFAULT_SEED):
     now = datetime.datetime.now()
 
-    # print("Only Historical Data")
+    print("Only Historical Data")
     apiList, location = getData.getData(
         '19.0368,73.0158', datetime.datetime(2018, 10, 15))
 
@@ -105,15 +103,14 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
         dayText.set_text(wind_model.day)
         if(wind_model.counter > len(wind_model.newArray)):
             anim.event_source.stop()
-        percentage = min(round(100*wind_model.counter /
-                               len(wind_model.newArray), 1), 100.0)
-        print("Loading:"+str(percentage)+"%")
+        percentage = min(
+            round((100*wind_model.counter/len(wind_model.newArray)), 1), 100.0)
+        print("Loading: "+str(percentage)+"%")
         return [vf_plot, pp_plot, dayText]
 
     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
-    anim.save('plume.mp4', writer=writer)                           # .mp4 video
-    # anim.save("plume.gif", PillowWriter(fps=15, bitrate=1800))    # GIF
+    anim.save("plume.gif", PillowWriter(fps=15, bitrate=1800))      # GIF
 
     new = datetime.datetime.now()
     print("Time:", (new-now))
