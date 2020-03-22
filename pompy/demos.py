@@ -1,13 +1,15 @@
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from matplotlib.animation import FuncAnimation, PillowWriter
+from matplotlib.animation import FuncAnimation, writers
 import numpy as np
 import models
 import processors
 import getData
 import datetime
-import matplotlib
+
+Writer = writers['ffmpeg']
+writer = Writer(fps=15, bitrate=1800)
 
 DEFAULT_SEED = 20181108
 
@@ -110,7 +112,8 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
 
     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
-    anim.save("plume.gif", PillowWriter(fps=15, bitrate=1800))      # GIF
+    anim.save('plume.mp4', writer=writer)                           # .mp4 video
+    # anim.save("plume.gif", PillowWriter(fps=15, bitrate=1800))    # GIF
 
     new = datetime.datetime.now()
     print("Time:", (new-now))
