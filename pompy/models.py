@@ -21,7 +21,8 @@ class Puff(SlottedIterable):
     __slots__ = ('x', 'y', 'z', 'r_sq')
 
     def __init__(self, x, y, z, r_sq):
-        assert r_sq >= 0., 'r_sq must be non-negative.'
+        if not(r_sq >= 0.):
+            print('Error: r_sq must be non-negative.')
         self.x = x
         self.y = y
         self.z = z
@@ -32,8 +33,10 @@ class Rectangle(SlottedIterable):
     __slots__ = ('x_min', 'x_max', 'y_min', 'y_max')
 
     def __init__(self, x_min, x_max, y_min, y_max):
-        assert x_min < x_max, 'Rectangle x_min must be < x_max.'
-        assert y_min < y_max, 'Rectangle y_min must be < y_max.'
+        if not(x_min < x_max):
+            print('Eror: Rectangle x_min must be < x_max.')
+        if not(y_min < y_max):
+            print('Error: Rectangle y_min must be < y_max.')
         self.x_min = x_min
         self.x_max = x_max
         self.y_min = y_min
@@ -53,7 +56,7 @@ class Rectangle(SlottedIterable):
 
 
 class PlumeModel(object):
-    def __init__(self, sim_region=None, source_pos=(5., 0., 0.),
+    def __init__(self, sim_region=None, source_pos=(50., 0., 0.),
                  wind_model=None, model_z_disp=True, centre_rel_diff_scale=2.,
                  puff_init_rad=0.0316, puff_spread_rate=0.001,
                  puff_release_rate=10, init_num_puffs=10, max_num_puffs=1000,
@@ -70,12 +73,12 @@ class PlumeModel(object):
         self.model_z_disp = model_z_disp
         self._vel_dim = 3 if model_z_disp else 2
         if model_z_disp and hasattr(centre_rel_diff_scale, '__len__'):
-            assert len(centre_rel_diff_scale) == 2, (
-                'When model_z_disp=True, centre_rel_diff_scale must be a '
-                'scalar or length 1 or 3 iterable.')
+            if not(len(centre_rel_diff_scale) == 2):
+                print(
+                    'Error: When model_z_disp=True, centre_rel_diff_scale must be a scalar or length 1 or 3 iterable.')
         self.centre_rel_diff_scale = centre_rel_diff_scale
-        assert sim_region.contains(source_pos[0], source_pos[1]), (
-            'Specified source position must be within simulation region.')
+        if not(sim_region.contains(source_pos[0], source_pos[1])):
+            print('Error: Specified source position must be within simulation region.')
         source_z = 0 if len(source_pos) != 3 else source_pos[2]
         self._new_puff_params = (
             source_pos[0], source_pos[1], source_z, puff_init_rad**2)
@@ -141,56 +144,18 @@ class WindModel(object):
         self._x_points = np.linspace(sim_region.x_min, sim_region.x_max, n_x)
         self._y_points = np.linspace(sim_region.y_min, sim_region.y_max, n_y)
         self._interp_set = True
-
-        # OUR VARIABLES
         self.counter = 0
         self.magnitude = 1
         self.angle = 0
         self.newU = 0
         self.newV = 0
         self.day = ""
-        self.array = DirArray[:14]
+        self.angleArray = DirArray[:14]
         self.speedArray = SpdArray[:14]
         self.dateArray = dateArray[:14]
-        self.minSpeed = min(self.speedArray)
-        self.speedArray = [i/self.minSpeed for i in self.speedArray]
-        self.newArray = []
-        for i in range(len(self.array)-1):
-            self.newArray.append(self.array[i])
-            self.diff = self.array[i+1] - self.array[i]
-            self.sign = np.sign(self.diff)
-            self.magDiff = abs(self.diff)
-            if self.magDiff > 180:
-                self.magDiff = abs(self.magDiff - 360)
-                self.sign = self.sign * -1
-            self.diff = self.magDiff * self.sign
-            self.diff = self.diff/600
-            for j in range(1, 600):
-                self.temp = self.array[i]+self.diff*j
-                if self.temp < 0:
-                    self.temp += 360
-                elif self.temp > 360:
-                    self.temp -= 360
-                self.newArray.append(self.temp)
-        self.newArray.append(self.array[-1])
-        self.newSpeedArray = []
-        for i in range(len(self.speedArray)-1):
-            self.newSpeedArray.append(self.speedArray[i])
-            self.diff = self.speedArray[i+1] - self.speedArray[i]
-            self.diff = self.diff/600
-            for j in range(1, 600):
-                self.temp = self.speedArray[i]+self.diff*j
-                self.newSpeedArray.append(self.temp)
-        self.newSpeedArray.append(self.speedArray[-1])
-        self.newDateArray = []
-        for i in range(len(self.dateArray)):
-            self.newDateArray.append(self.dateArray[i]+" 00:00:00")
-            for j in range(1, 10):
-                self.temp = self.dateArray[i]+" 0"+str(j)+":00:00"
-                self.newDateArray.append(self.temp)
-            for j in range(10, 24):
-                self.temp = self.dateArray[i]+" "+str(j)+":00:00"
-                self.newDateArray.append(self.temp)
+        self.newAngleArray = self.createAngleArray(self.angleArray)
+        self.newSpeedArray = self.createSpeedArray(self.speedArray)
+        self.newDateArray = self.createDateArray(self.dateArray)
 
     def _set_interpolators(self):
         self._interp_u = interp.RectBivariateSpline(
@@ -219,22 +184,67 @@ class WindModel(object):
 
     def update(self, dt):
         try:
-            self.angle = self.newArray[self.counter]
+            self.angle = self.newAngleArray[self.counter]
             self.magnitude = self.newSpeedArray[self.counter]
+            self.counter += 1
+            self.day = self.newDateArray[self.counter//25]
         except IndexError:
             pass
         self.newU = self.magnitude*math.cos(self.angle * (math.pi/180))
         self.newV = self.magnitude*math.sin(self.angle * (math.pi/180))
         self.du = self.newU - self._u_int[0][0]
         self.dv = self.newV - self._v_int[0][0]
-        self.counter += 1
-        try:
-            self.day = self.newDateArray[self.counter//25]
-        except IndexError:
-            pass
         self._u_int += self.du
         self._v_int += self.dv
         self._interp_set = False
+
+    def createAngleArray(self, angleArray):
+        tempAngleArray = []
+        for i in range(len(angleArray)-1):
+            tempAngleArray.append(angleArray[i])
+            difference = angleArray[i+1] - angleArray[i]
+            sign = np.sign(difference)
+            magDiff = abs(difference)
+            if magDiff > 180:
+                magDiff = abs(magDiff - 360)
+                sign = sign * -1
+            difference = magDiff * sign
+            difference = difference/600
+            for j in range(1, 600):
+                newAngle = angleArray[i]+difference*j
+                if newAngle < 0:
+                    newAngle += 360
+                elif newAngle > 360:
+                    newAngle -= 360
+                tempAngleArray.append(newAngle)
+        tempAngleArray.append(angleArray[-1])
+        return tempAngleArray
+
+    def createSpeedArray(self, speedArray):
+        speedArray = [i/min(speedArray) for i in speedArray]
+        tempSpeedArray = []
+        difference = 0
+        for i in range(len(speedArray)-1):
+            tempSpeedArray.append(speedArray[i])
+            difference = speedArray[i+1] - speedArray[i]
+            difference = difference/600
+            for j in range(1, 600):
+                increment = speedArray[i]+difference*j
+                tempSpeedArray.append(increment)
+        tempSpeedArray.append(speedArray[-1])
+        return tempSpeedArray
+
+    def createDateArray(self, dateArray):
+        tempDateArray = []
+        for i in range(len(dateArray)):
+            tempDateArray.append(dateArray[i]+" 00:00:00")
+            for j in range(1, 10):
+                dateStr = dateArray[i]+" 0"+str(j)+":00:00"
+                tempDateArray.append(dateStr)
+            for j in range(10, 24):
+                dateStr = dateArray[i]+" "+str(j)+":00:00"
+                tempDateArray.append(dateStr)
+        return tempDateArray
 
 
 class ColouredNoiseGenerator(object):

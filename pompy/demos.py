@@ -36,9 +36,9 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
                      seed=DEFAULT_SEED):
     now = datetime.datetime.now()
 
-    print("Only Historical Data")
-    apiList, location = getData.getData(
-        '19.0368,73.0158', datetime.datetime(2018, 10, 15))
+    # print("Only Historical Data")
+    # apiList, location = getData.getData(
+    #     '19.0368,73.0158', datetime.datetime(2018, 10, 15))
 
     # print("Only Predicted Data")
     # apiList, location = getData.getData(
@@ -48,23 +48,23 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
     # apiList, location = getData.getData(
     #     '19.0368,73.0158', datetime.datetime(2020, 3, 15))
 
-    array = []
-    speedArray = []
-    dateArray = []
-    for i in apiList:
-        array.append(int(i['Direction']))
-        speedArray.append(int(i['Speed']))
-        d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
-        dateArray.append(d.strftime('%b %d,%Y'))
+    # array = []
+    # speedArray = []
+    # dateArray = []
+    # for i in apiList:
+    #     array.append(int(i['Direction']))
+    #     speedArray.append(int(i['Speed']))
+    #     d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
+    #     dateArray.append(d.strftime('%b %d,%Y'))
     # print("Demo: Dir", array)
     # print("Demo: Spd", speedArray)
     # print("Demo: Dte", dateArray)
 
-    # array = [200, 192, 185, 213, 189, 194, 218,
-    #          144, 180, 187, 246, 179, 255, 237, 199, 241]
-    # speedArray = [8, 10, 9, 9, 12, 8, 10, 9, 8, 9, 10, 10, 12, 12, 8, 9]
-    # dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
-    #              'Apr 04,2020', 'Apr 05,2020']
+    array = [200, 192, 185, 213, 189, 194, 218,
+             144, 180, 187, 246, 179, 255, 237, 199, 241]
+    speedArray = [8, 10, 9, 9, 12, 8, 10, 9, 8, 9, 10, 10, 12, 12, 8, 9]
+    dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
+                 'Apr 04,2020', 'Apr 05,2020']
 
     # array = [200, 192, 185]
     # speedArray = [8, 10, 9]
@@ -75,7 +75,7 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
     wind_model = models.WindModel(
         sim_region, 21, 11, rng=rng, DirArray=array, SpdArray=speedArray, dateArray=dateArray)
     plume_model = models.PlumeModel(
-        sim_region, (50., 0., 0.), wind_model, rng=rng)
+        sim_region, wind_model=wind_model, rng=rng)
     fig, ax, title = set_up_figure()
     vf_plot = plt.quiver(
         wind_model.x_points, wind_model.y_points,
@@ -101,10 +101,10 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
         pp_plot.set_offsets(plume_model.puff_array[:, :2])
         pp_plot._sizes = radius_mult * plume_model.puff_array[:, 3]**0.5
         dayText.set_text(wind_model.day)
-        if(wind_model.counter > len(wind_model.newArray)):
+        if(wind_model.counter > len(wind_model.newAngleArray)):
             anim.event_source.stop()
         percentage = min(
-            round((100*wind_model.counter/len(wind_model.newArray)), 1), 100.0)
+            round((100*wind_model.counter/len(wind_model.newAngleArray)), 1), 100.0)
         print("Loading: "+str(percentage)+"%")
         return [vf_plot, pp_plot, dayText]
 
