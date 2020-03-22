@@ -32,43 +32,24 @@ def update_decorator(dt, title, steps_per_frame, models):
     return inner_decorator
 
 
-def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
-                     seed=DEFAULT_SEED):
+def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
+                         seed=DEFAULT_SEED, latLng='19.0368,73.0158', start_datetimeObject=datetime.datetime(2018, 10, 15)):
     now = datetime.datetime.now()
+    apiList, location = getData.getData(latLng, start_datetimeObject)
+    array = []
+    speedArray = []
+    dateArray = []
+    for i in apiList:
+        array.append(int(i['Direction']))
+        speedArray.append(int(i['Speed']))
+        d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
+        dateArray.append(d.strftime('%b %d,%Y'))
 
-    # print("Only Historical Data")
-    # apiList, location = getData.getData(
-    #     '19.0368,73.0158', datetime.datetime(2018, 10, 15))
-
-    # print("Only Predicted Data")
-    # apiList, location = getData.getData(
-    #     '19.0368,73.0158', datetime.datetime(2020, 3, 22))
-
-    # print("Both")
-    # apiList, location = getData.getData(
-    #     '19.0368,73.0158', datetime.datetime(2020, 3, 15))
-
-    # array = []
-    # speedArray = []
-    # dateArray = []
-    # for i in apiList:
-    #     array.append(int(i['Direction']))
-    #     speedArray.append(int(i['Speed']))
-    #     d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
-    #     dateArray.append(d.strftime('%b %d,%Y'))
-    # print("Demo: Dir", array)
-    # print("Demo: Spd", speedArray)
-    # print("Demo: Dte", dateArray)
-
-    array = [200, 192, 185, 213, 189, 194, 218,
-             144, 180, 187, 246, 179, 255, 237, 199, 241]
-    speedArray = [8, 10, 9, 9, 12, 8, 10, 9, 8, 9, 10, 10, 12, 12, 8, 9]
-    dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
-                 'Apr 04,2020', 'Apr 05,2020']
-
-    # array = [200, 192, 185]
-    # speedArray = [8, 10, 9]
-    # dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020']
+    # array = [200, 192, 185, 213, 189, 194, 218,
+    #          144, 180, 187, 246, 179, 255, 237, 199, 241]
+    # speedArray = [8, 10, 9, 9, 12, 8, 10, 9, 8, 9, 10, 10, 12, 12, 8, 9]
+    # dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
+    #              'Apr 04,2020', 'Apr 05,2020']
 
     rng = np.random.RandomState(seed)
     sim_region = models.Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
@@ -152,6 +133,16 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
 #     return fig, ax, anim
 
 
-fig, ax, anim = plume_model_demo()
-# fig, ax, anim = conc_point_val_demo()
-# plt.show()
+if __name__ == "__main__":
+    lat = input("Enter lat: ")
+    lng = input("Enter lng: ")
+    day = int(input("Enter Day: "))
+    month = int(input("Enter Month: "))
+    year = int(input("Enter Year: "))
+
+    latLng = lat + ',' + lng  # '19.0368,73.0158'
+    fig, ax, anim = simulate_plume_model(
+        latLng=latLng, start_datetimeObject=datetime.datetime(year, month, day))
+
+    # fig, ax, anim = conc_point_val_demo()
+    # plt.show()
