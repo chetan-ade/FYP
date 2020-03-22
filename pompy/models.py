@@ -149,9 +149,9 @@ class WindModel(object):
         self.newU = 0
         self.newV = 0
         self.day = ""
-        self.array = DirArray
-        self.speedArray = SpdArray
-        self.dateArray = dateArray
+        self.array = DirArray[:14]
+        self.speedArray = SpdArray[:14]
+        self.dateArray = dateArray[:14]
         self.minSpeed = min(self.speedArray)
         self.speedArray = [i/self.minSpeed for i in self.speedArray]
         self.newArray = []

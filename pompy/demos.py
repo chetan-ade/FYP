@@ -103,6 +103,9 @@ def plume_model_demo(dt=0.03, t_max=240, steps_per_frame=20,
         dayText.set_text(wind_model.day)
         if(wind_model.counter > len(wind_model.newArray)):
             anim.event_source.stop()
+        percentage = min(round(100*wind_model.counter /
+                               len(wind_model.newArray), 1), 100.0)
+        print("Loading:"+str(percentage)+"%")
         return [vf_plot, pp_plot, dayText]
 
     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
