@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.animation import FuncAnimation, PillowWriter
 import numpy as np
-import models
-import processors
-import getData
+from pompy.models import Rectangle, WindModel, PlumeModel
+import pompy.processors
+from pompy.getData import getData
 import datetime
 import matplotlib
 
@@ -35,7 +35,7 @@ def update_decorator(dt, title, steps_per_frame, models):
 def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
                          seed=DEFAULT_SEED, latLng='19.0368,73.0158', start_datetimeObject=datetime.datetime(2018, 10, 15)):
     now = datetime.datetime.now()
-    apiList, location = getData.getData(latLng, start_datetimeObject)
+    apiList, location = getData(latLng, start_datetimeObject)
     array = []
     speedArray = []
     dateArray = []
@@ -52,10 +52,10 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     #              'Apr 04,2020', 'Apr 05,2020']
 
     rng = np.random.RandomState(seed)
-    sim_region = models.Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
-    wind_model = models.WindModel(
+    sim_region = Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
+    wind_model = WindModel(
         sim_region, 21, 11, rng=rng, DirArray=array, SpdArray=speedArray, dateArray=dateArray)
-    plume_model = models.PlumeModel(
+    plume_model = PlumeModel(
         sim_region, wind_model=wind_model, rng=rng)
     fig, ax, title = set_up_figure()
     vf_plot = plt.quiver(
