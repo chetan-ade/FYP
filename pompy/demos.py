@@ -8,6 +8,7 @@ import pompy.processors
 from pompy.getData import getData
 import datetime
 import matplotlib
+import os
 
 DEFAULT_SEED = 20181108
 
@@ -91,8 +92,9 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
 
     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
-    anim.save("plume.gif", PillowWriter(fps=15, bitrate=1800))      # GIF
-
+    anim.save("simulation.gif", PillowWriter(fps=15, bitrate=1800))      # GIF
+    os.system("ffmpeg -i simulation.gif ./static/video.mp4")
+    os.remove("simulation.gif")
     new = datetime.datetime.now()
     print("Time:", (new-now))
 
@@ -136,6 +138,7 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
 if __name__ == "__main__":
     lat = input("Enter lat: ")
     lng = input("Enter lng: ")
+    print("Date limit: 01-JUL-2008 to Today")
     day = int(input("Enter Day: "))
     month = int(input("Enter Month: "))
     year = int(input("Enter Year: "))

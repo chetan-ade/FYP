@@ -4,9 +4,11 @@ import datetime
 
 app = Flask(__name__, static_folder='static')
 
+
 @app.route("/")
 def index():
     return render_template('index.html')
+
 
 @app.route("/", methods=['POST'])
 def disp_output():
@@ -25,9 +27,10 @@ def disp_output():
 
     fig, ax, anim = simulate_plume_model(
         latLng=latLng, start_datetimeObject=datetime.datetime(year, month, day))
-    anim_path = 'static/plume.mp4'
+    anim_path = 'static/video.mp4'
 
     return render_template('index.html', output_path=anim_path)
+
 
 if __name__ == "__main__":
     app.run()
