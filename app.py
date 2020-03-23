@@ -10,7 +10,7 @@ anim_path = 'static/simulation.mp4'
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('index.html', visibility="hidden")
 
 
 @app.route("/", methods=['POST'])
@@ -30,7 +30,7 @@ def disp_output():
     fig, ax, anim = simulate_plume_model(
         latLng=latLng, start_datetimeObject=datetime.datetime(year, month, day))
 
-    return render_template('index.html', output_path=anim_path)
+    return render_template('index.html', output_path=anim_path, visibility="visible")
 
 
 if __name__ == "__main__":
