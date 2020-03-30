@@ -28,7 +28,7 @@ params = {
 def getHistoricalData(location):
     retrieve_hist_data(api_key, [location], start_date, end_date, frequency, location_label = False, export_csv = True, store_df = False)
 
-location = '14.865322,74.439642'
+location = '21.238611,73.350000'
 getHistoricalData(location)
 
 preprocessing(location)
