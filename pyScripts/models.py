@@ -199,6 +199,11 @@ class WindModel(object):
         self._interp_set = False
 
     def createAngleArray(self, angleArray):
+        for i in range(len(angleArray)):
+            if angleArray[i] <= 90:
+                angleArray[i] = 90 - angleArray[i]
+            else:
+                angleArray[i] = 450 - angleArray[i]
         tempAngleArray = []
         for i in range(len(angleArray)-1):
             tempAngleArray.append(angleArray[i])

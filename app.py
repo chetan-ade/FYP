@@ -15,13 +15,6 @@ def index():
 
 @app.route("/", methods=['POST'])
 def disp_output():
-    # lat = input("Enter lat: ")
-    # lng = input("Enter lng: ")
-    # day = int(input("Enter Day: "))
-    # month = int(input("Enter Month: "))
-    # year = int(input("Enter Year: "))
-    # latLng = lat + ',' + lng  # '19.0368,73.0158'
-
     latLng = '19.0368,73.0158'
     day = 1
     month = 2
