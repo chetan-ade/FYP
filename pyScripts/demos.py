@@ -38,6 +38,8 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
                          seed=DEFAULT_SEED, latLng='21.238611,73.350000', start_datetimeObject=datetime.datetime(2020, 1, 15)):
     now = datetime.datetime.now()
     apiList, location = getData(latLng, start_datetimeObject)
+    new = datetime.datetime.now()
+    print("\n\n\n\n\nTIME for getdata:", (new-now), "\n\n\n\n\n")
     array = []
     speedArray = []
     dateArray = []
@@ -94,10 +96,10 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
     anim.save("simulation.gif", PillowWriter(fps=15, bitrate=1800))      # GIF
-    os.system("ffmpeg -i simulation.gif ./static/simulation.mp4")
+    os.system("ffmpeg -i simulation.gif ./static/simulation.mp4 -loglevel quiet")
     os.remove("simulation.gif")
     new = datetime.datetime.now()
-    print("Time:", (new-now))
+    print("\n\n\n\n\nTIME:", (new-now), "\n\n\n\n\n")
 
     return fig, ax, anim
 

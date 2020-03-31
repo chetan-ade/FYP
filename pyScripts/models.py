@@ -204,6 +204,18 @@ class WindModel(object):
                 angleArray[i] = 90 - angleArray[i]
             else:
                 angleArray[i] = 450 - angleArray[i]
+        # print(angleArray)
+        for i in range(len(angleArray)-1):
+            dif = abs(angleArray[i+1] - angleArray[i])
+            if dif <= 30:
+                if angleArray[i+1] > angleArray[i]:
+                    angleArray[i+1] = (angleArray[i] + 30) % 360
+                else:
+                    angleArray[i+1] = angleArray[i] - 30
+                    if angleArray[i+1] < 0:
+                        angleArray[i+1] += 360
+        # print(angleArray)
+        # exit()
         tempAngleArray = []
         for i in range(len(angleArray)-1):
             tempAngleArray.append(angleArray[i])
@@ -226,7 +238,8 @@ class WindModel(object):
         return tempAngleArray
 
     def createSpeedArray(self, speedArray):
-        speedArray = [i/min(speedArray) for i in speedArray]
+        mini = 0.75/min(speedArray)
+        speedArray = [i*mini for i in speedArray]
         tempSpeedArray = []
         difference = 0
         for i in range(len(speedArray)-1):

@@ -5,7 +5,7 @@ import os
 from os import path
 
 app = Flask(__name__, static_folder='static')
-anim_path = '/static/simulation.mp4'
+anim_path = 'static\simulation.mp4'
 
 
 @app.route("/")
