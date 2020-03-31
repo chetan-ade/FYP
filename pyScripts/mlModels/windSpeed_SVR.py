@@ -53,7 +53,7 @@ def windSpeed(location):
     sample_p = sample_p.reshape(-1)
 
     pred_filename = location+".csv"
-    filepath = "../dataFiles/"+pred_filename
+    filepath = "dataFiles/"+pred_filename
     pred_data = pd.read_csv(filepath)
     pred_data['speed'].iloc[-90:] = sample_p
     pred_data.to_csv(filepath, index=False)

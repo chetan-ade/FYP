@@ -10,7 +10,7 @@ def preprocessing(location):
     final_df['date'] = df['date_time']
     final_df['direction'] = df['winddirDegree']
     final_df['speed'] = df['windspeedKmph']
-    filepath = "../dataFiles/"+filename
+    filepath = "dataFiles/"+filename
     final_df.to_csv(filepath, index=False)
 
     for i in range(len(df['winddirDegree'])):

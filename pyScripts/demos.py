@@ -6,6 +6,7 @@ import numpy as np
 from pyScripts.models import Rectangle, WindModel, PlumeModel
 import pyScripts.processors
 from pyScripts.getData import getData
+# from pyScripts.getApiData import getData
 import datetime
 import matplotlib
 import os
@@ -34,7 +35,7 @@ def update_decorator(dt, title, steps_per_frame, models):
 
 
 def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
-                         seed=DEFAULT_SEED, latLng='19.0368,73.0158', start_datetimeObject=datetime.datetime(2018, 10, 15)):
+                         seed=DEFAULT_SEED, latLng='21.238611,73.350000', start_datetimeObject=datetime.datetime(2020, 1, 15)):
     now = datetime.datetime.now()
     apiList, location = getData(latLng, start_datetimeObject)
     array = []
@@ -42,7 +43,7 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     dateArray = []
     for i in apiList:
         array.append(int(i['Direction']))
-        speedArray.append(int(i['Speed']))
+        speedArray.append(int(float(i['Speed'])))
         d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
         dateArray.append(d.strftime('%b %d,%Y'))
 

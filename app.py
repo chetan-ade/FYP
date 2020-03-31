@@ -5,7 +5,7 @@ import os
 from os import path
 
 app = Flask(__name__, static_folder='static')
-anim_path = 'static/simulation.mp4'
+anim_path = '/static/simulation.mp4'
 
 
 @app.route("/")
@@ -15,7 +15,7 @@ def index():
 
 @app.route("/", methods=['POST'])
 def disp_output():
-    latLng = '19.0368,73.0158'
+    latLng = '21.238611,73.350000'
     day = 1
     month = 2
     year = 2020
