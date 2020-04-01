@@ -8,7 +8,9 @@
 
 #indexPageContent {
     color: white;
-    width: 30%;
+    height: 100%;
+    margin-top: 10%;
+    margin-bottom: 10%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -21,4 +23,77 @@
     font-family: Martel;
     line-height: 1.6;
     text-align: center;
+}
+
+#predict{
+    margin: 0;
+    color: #fff;
+    background: #16a085;
+    border: none;
+    width: 70%;
+    height: 40px;
+    margin-top: -20px;
+    margin-left: 15%;
+    border-radius: 4px;
+    border-bottom: 4px solid #117A60;
+    transition: all .2s ease;
+    outline: none;
+    }
+#predict:hover{
+    background: #149174;
+        color: #0C5645;
+    }
+#predict:active{
+    border:0;
+}
+
+#demo,
+#demoOuter {
+    color: black;
+}
+
+#locateMe,
+#locateMe:hover,
+#showMap,
+#showMap:hover {
+    background-color: white;
+    padding: 5px 10px 5px 10px;
+    border-left: 0px;
+    box-shadow: none;
+}
+
+#startInputText {
+    height: 50px;
+    border-color: #6c757d;
+    box-shadow: none;
+    border-right: 0px;
+}
+
+#startInputText:focus {
+    height: 50px;
+    border-color: #6c757d;
+    box-shadow: none;
+    border-right: 0px;
+}
+
+#mapID {
+    margin-top: 5%;
+    width: 700px;
+    height: 300px;
+}
+
+#outerMapID {
+    padding-bottom: 10%;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus,
+.btn-primary:active:hover {
+    background-color: red !important;
+    border-color: red !important;
+    outline-color: red !important;
+    box-shadow: none !important;
 }

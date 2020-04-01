@@ -15,22 +15,32 @@
 </head>
 
 <body>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqpHfAhTZPkSXc3Bs6dskNBv-GXIVOa2I&libraries=places"></script>
     <video autoplay muted loop id="bgVideo">
         <source src="{{url_for('static', filename='index.mp4')}}" type="video/mp4">
     </video>
 
     <div id="indexPageContent">
-        <h2>Experience the power of a nuclear blast in your area</h2>
-        <br><br>
-        Enter a location
-        ----------------
+        <h1>Experience the power of a nuclear blast in your area</h1>
         <br><br>
         <form action="/" method="post">
-            <button name="forwardBtn" type="submit">Submit</button>
+            <div class="input-group mb-3" style="width: 100%;">
+                <input id="startInputText" name="inputLoc" type="text" placeholder="Enter the location" class="form-control" aria-label="Text input with dropdown button"></input>
+                <input type="hidden" name="locLat" value="" id="lat">
+                <input type="hidden" name="locLng" value="" id="lng">
+                <div class="input-group-append">
+                    <button id = "locateMe" class="btn btn-secondary" type="button" data-toggle="tooltip" data-placement="bottom" title="Locate Me" onclick="getLocation()"><img src="../static/locateMe.png"></button>
+                    <button id = "showMap" class="btn btn-secondary" type="button" data-toggle="tooltip" data-placement="bottom" title="Show Map" onclick="startMap()"><img src="../static/showMap.png"></button>
+                </div>
+            </div>
+            <p id = "demo" style = "padding:10px;"></p>
+            <button type="submit" id="predict">Submit</button>
+            <div id = "outerMapID">
+                <div id="mapID"></div>
+            </div>
         </form>
         <br><br>
-        <!-- {{ output_path }} -->
-        <embed type="video/mp4" style="width: 400px; height: 300px; visibility: {{ visibility }};" src={{ output_path }} max />
+        <embed type="video/mp4" style="width: 140%; height: 90%; margin-left: -20%; margin-bottom: 10%; visibility: {{ visibility }};" src={{ output_path }} max />
     </div>
 
 
@@ -42,6 +52,179 @@
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+
+    <script type="text/javascript">
+        var x = document.getElementById("demo");
+        var y = document.getElementById("startInputText"); 
+        var z;
+        var startLat = undefined;
+        var startLng = undefined;
+        var startAdd = undefined;
+        var map = undefined;
+        var temp;
+        var marker = undefined;
+        var defaultBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(23.63936, 68.14712),
+                new google.maps.LatLng(28.20453, 97.34466));
+        var options = {
+            bounds: defaultBounds
+        };
+
+        google.maps.event.addDomListener(window, 'load', function () {
+            var places = new google.maps.places.Autocomplete(document.getElementById('startInputText'),options);
+            google.maps.event.addListener(places, 'place_changed', function () {
+                var place = places.getPlace();
+                startAdd = place.formatted_address;
+                startLat = place.geometry.location.lat();
+                startLng = place.geometry.location.lng();
+                if(typeof map !== "undefined")
+                {
+                    var location2 = new google.maps.LatLng(startLat, startLng);
+                    marker.setPosition(location2);
+                    map.setCenter({lat:startLat, lng:startLng});
+                }
+                // var mesg = "Address: " + startAdd;
+                // mesg += "\nLatitude: " + startLat;
+                // mesg += "\nLongitude: " + startLng;
+                // alert(mesg);
+                document.getElementById("lat").value = startLat
+                document.getElementById("lng").value = startLng
+            });
+        });
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+                x.innerHTML = "";
+            } else { 
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            z = position.coords.latitude + 
+            "," + position.coords.longitude;
+            startLat = position.coords.latitude;
+            startLng = position.coords.longitude;
+            GetAddress();
+            
+            // var mesg = "Address: " + startAdd;
+            // mesg += "\nLatitude: " + startLat;
+            // mesg += "\nLongitude: " + startLng;
+            // alert(mesg);
+            document.getElementById("lat").value = startLat
+            document.getElementById("lng").value = startLng
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    x.innerHTML = "User denied the request for Geolocation."
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    x.innerHTML = "Location information is unavailable."
+                    break;
+                case error.TIMEOUT:
+                    x.innerHTML = "The request to get user location timed out."
+                    break;
+                case error.UNKNOWN_ERROR:
+                    x.innerHTML = "An unknown error occurred."
+                    break;
+            }
+        }
+
+        function GetAddress() {
+            var latlngStr = z.split(',', 2);
+            var lat = parseFloat(latlngStr[0]);
+            var lng = parseFloat(latlngStr[1]);
+            var latlng = new google.maps.LatLng(lat, lng);
+            var geocoder = geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[0]) {
+                        y.value = results[0].formatted_address;
+                        startAdd = y.value;
+                        if(typeof map !== "undefined")
+                        {
+                            var location1 = new google.maps.LatLng(startLat, startLng);
+                            marker.setPosition(location1);
+                            map.setCenter({lat:startLat, lng:startLng});
+                        }
+                    }
+                }
+            });
+        }
+
+        function startMap() {
+            var a = document.getElementById("mapID");
+            var myLatLng = {lat: 19.0330, lng: 73.0297};
+            map = new google.maps.Map(document.getElementById("mapID"), {
+                zoom: 12,
+                center: myLatLng
+            });
+            marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                title: 'Select your Location',
+                draggable: true
+            });
+            google.maps.event.addListener(map, 'click', function(event) {
+                placeMarker(event.latLng);
+            });
+            function placeMarker(location) {
+                marker.setPosition(location);
+                toggleBounce();
+                var geocoder = geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'latLng': location }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            y.value = results[0].formatted_address;
+                            startLat = location.lat();
+                            startLng = location.lng();
+                            startAdd = y.value;
+                            
+                            // var mesg = "Address: " + startAdd;
+                            // mesg += "\nLatitude: " + startLat;
+                            // mesg += "\nLongitude: " + startLng;
+                            // alert(mesg);
+                            document.getElementById("lat").value = startLat
+                            document.getElementById("lng").value = startLng
+                        }
+                    }
+                });
+            }
+
+            function toggleBounce() {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function(){ marker.setAnimation(null); }, 375);
+            }
+
+            google.maps.event.addListener(marker,'dragend',function(){
+                var lat = marker.getPosition().lat();
+                var lng = marker.getPosition().lng();
+                var location = new google.maps.LatLng(lat, lng);
+                var geocoder = geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'latLng': location }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            y.value = results[0].formatted_address;
+                            startLat = lat;
+                            startLng = lng;
+                            startAdd = y.value;
+                            
+                            // var mesg = "Address: " + startAdd;
+                            // mesg += "\nLatitude: " + startLat;
+                            // mesg += "\nLongitude: " + startLng;
+                            // alert(mesg);
+                            document.getElementById("lat").value = startLat
+                            document.getElementById("lng").value = startLng
+                        }
+                    }
+                });
+            })
+        } 
     </script>
 </body>
 

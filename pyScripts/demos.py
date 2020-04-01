@@ -39,7 +39,7 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     now = datetime.datetime.now()
     apiList, location = getData(latLng, start_datetimeObject)
     new = datetime.datetime.now()
-    # print("\n\n\n\n\nTIME for getdata:", (new-now), "\n\n\n\n\n")
+    print("\n\n\n\n\nTIME for getdata:", (new-now), "\n\n\n\n\n")
     array = []
     speedArray = []
     dateArray = []
@@ -99,7 +99,7 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     os.system("ffmpeg -i simulation.gif ./static/simulation.mp4 -loglevel quiet")
     os.remove("simulation.gif")
     new = datetime.datetime.now()
-    print("\n\n\n\n\nFINAL TIME:", (new-now), "\n\n\n\n\n")
+    print("\n\n\n\n\nTIME:", (new-now), "\n\n\n\n\n")
 
     return fig, ax, anim
 
@@ -141,7 +141,8 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
 if __name__ == "__main__":
     lat = input("Enter lat: ")
     lng = input("Enter lng: ")
-    day = int(input("Date limit: 01-JUL-2008 to Today\nEnter Day: "))
+    print("Date limit: 01-JUL-2008 to Today")
+    day = int(input("Enter Day: "))
     month = int(input("Enter Month: "))
     year = int(input("Enter Year: "))
 

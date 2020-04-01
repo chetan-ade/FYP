@@ -6,7 +6,7 @@ from datetime import date
 from wwo_hist import retrieve_hist_data
 import csv
 
-api_key = 'dae5811250aa4cdd9db101705202903'
+api_key = '77d172a5ab384b0b889100954200104'
 start_date = '01-JUL-2008'
 end_date = date.today().strftime("%d-%b-%Y").upper()
 frequency = 24
