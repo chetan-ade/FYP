@@ -15,7 +15,7 @@ def index():
 
 @app.route("/", methods=['POST'])
 def disp_output():
-    latLng = '21.238611,73.350000'
+    latLng = '19.033000,73.029700'
     day = 1
     month = 2
     year = 2020

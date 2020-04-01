@@ -22,6 +22,7 @@ def windDir(location):
     y = le_pred.fit_transform(data.WindDir)
     y = np_utils.to_categorical(y)
     y = y.astype('int32')
+    out_classes = y.shape[1]
 
     model = Sequential()
     model.add(Dense(units=16, input_dim=2, activation='relu'))
@@ -38,7 +39,7 @@ def windDir(location):
     model.add(Dense(units=32, activation='relu'))
     model.add(Dense(units=32, activation='relu'))
     model.add(Dense(units=32, activation='relu'))
-    model.add(Dense(units=8, activation='softmax'))
+    model.add(Dense(units=out_classes, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.fit(data.iloc[:, :-1], y, epochs=200, batch_size=512)
 

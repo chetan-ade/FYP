@@ -7,7 +7,7 @@ from pyScripts.mlModels.windDir_NN import windDir
 from pyScripts.mlModels.windSpeed_SVR import windSpeed
 
 def collect(location):
-    api_key = 'dae5811250aa4cdd9db101705202903'
+    api_key = '78dec329952f4b7387972337200104'
     start_date = '01-JUL-2008'
     end_date = date.today().strftime("%d-%b-%Y").upper()
     frequency= 24
