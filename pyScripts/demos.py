@@ -99,7 +99,7 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     os.system("ffmpeg -i simulation.gif ./static/simulation.mp4 -loglevel quiet")
     os.remove("simulation.gif")
     new = datetime.datetime.now()
-    print("\n\n\n\n\nTIME:", (new-now), "\n\n\n\n\n")
+    print("\n\n\n\n\nFINAL TIME:", (new-now), "\n\n\n\n\n")
 
     return fig, ax, anim
 

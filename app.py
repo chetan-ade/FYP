@@ -15,7 +15,8 @@ def index():
 
 @app.route("/", methods=['POST'])
 def disp_output():
-    latLng = '21.238611,73.350000'
+    # latLng = '21.238611,73.350000'  # Best Case
+    latLng = '19.033000,73.029700'  # Worst Case
     day = 1
     month = 2
     year = 2020
