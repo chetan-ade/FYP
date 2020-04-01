@@ -204,7 +204,6 @@ class WindModel(object):
                 angleArray[i] = 90 - angleArray[i]
             else:
                 angleArray[i] = 450 - angleArray[i]
-        # print(angleArray)
         for i in range(len(angleArray)-1):
             dif = abs(angleArray[i+1] - angleArray[i])
             if dif <= 30:
@@ -214,7 +213,6 @@ class WindModel(object):
                     angleArray[i+1] = angleArray[i] - 30
                     if angleArray[i+1] < 0:
                         angleArray[i+1] += 360
-        # print(angleArray)
         # exit()
         tempAngleArray = []
         for i in range(len(angleArray)-1):

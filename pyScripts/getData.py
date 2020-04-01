@@ -7,7 +7,21 @@ from wwo_hist import retrieve_hist_data
 import csv
 from pyScripts.mlModels.data_collection import collect
 
-api_key = 'ca38a817c48d4240beb84742200104'
+
+def getApiKey():
+    api_list = [['sifisel996@mailboxt.com', '8a8a662e947c4d8bb7a95716200104'],
+                ['noceb41307@mailboxt.com', '77d172a5ab384b0b889100954200104'],
+                ['rirake5230@smlmail.com',  'cced7653c5684a619c2101325200104'],
+                ['yiwov98027@mailboxt.com', 'd230320c4282460580d101501200104'],
+                ['locohed521@svpmail.com',  'ae8cb3f0c32b4b8e9d3101615200104']]
+    counterFile = open('.\dataFiles\counter.txt', 'r+')
+    counter = int(counterFile.read())
+    counterFile.seek(0)
+    counterFile.write(str((counter+1) % len(api_list)))
+    return api_list[counter][1]
+
+
+api_key = getApiKey()
 
 url = 'http://api.worldweatheronline.com/premium/v1/weather.ashx?'
 
@@ -62,8 +76,4 @@ def getData(location, startDate):
         curSpd = i[-1]
         element = {'Date': curDate, 'Direction': curDir, 'Speed': curSpd}
         apiList.append(element)
-
-    # print(apiList)
     return(apiList, location)
-
-# getData('21.238611,73.350000', '15-Jan-2020')

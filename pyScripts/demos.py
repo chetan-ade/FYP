@@ -141,8 +141,7 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
 if __name__ == "__main__":
     lat = input("Enter lat: ")
     lng = input("Enter lng: ")
-    print("Date limit: 01-JUL-2008 to Today")
-    day = int(input("Enter Day: "))
+    day = int(input("Date limit: 01-JUL-2008 to Today\nEnter Day: "))
     month = int(input("Enter Month: "))
     year = int(input("Enter Year: "))
 
