@@ -6,28 +6,16 @@ from pyScripts.mlModels.data_preprocessing import preprocessing
 from pyScripts.mlModels.windDir_NN import windDir
 from pyScripts.mlModels.windSpeed_SVR import windSpeed
 
-def collect(location):
-    api_key = '78dec329952f4b7387972337200104'
+
+def collect(location, api_key):
+    api_key = api_key
     start_date = '01-JUL-2008'
     end_date = date.today().strftime("%d-%b-%Y").upper()
-    frequency= 24
-
-    url = 'http://api.worldweatheronline.com/premium/v1/weather.ashx?'
-
-    params = {
-        'key': api_key,
-        'num_of_days': '1',
-        'tp': '24',
-        'cc': 'no',
-        'mca': 'no',
-        'format': 'json',
-        'includelocation': 'yes',
-        'q': None,
-        'date': None,
-        }
+    frequency = 24
 
     def getHistoricalData(location):
-        retrieve_hist_data(api_key, [location], start_date, end_date, frequency, location_label = False, export_csv = True, store_df = False)
+        retrieve_hist_data(api_key, [location], start_date, end_date,
+                           frequency, location_label=False, export_csv=True, store_df=False)
 
     # location = '21.238611,73.350000'
     getHistoricalData(location)

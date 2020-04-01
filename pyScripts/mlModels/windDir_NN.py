@@ -8,6 +8,7 @@ from tensorflow_core.python.keras.utils import np_utils
 import datetime
 from datetime import date
 
+
 def windDir(location):
     filename = location+"_preprocessed.csv"
     df = pd.read_csv(filename)
@@ -17,7 +18,7 @@ def windDir(location):
     data['day'] = df['day']
     data['month'] = df['month']
     data['WindDir'] = df['WindDir']
-    
+
     le_pred = LabelEncoder()
     y = le_pred.fit_transform(data.WindDir)
     y = np_utils.to_categorical(y)
@@ -40,7 +41,8 @@ def windDir(location):
     model.add(Dense(units=32, activation='relu'))
     model.add(Dense(units=32, activation='relu'))
     model.add(Dense(units=out_classes, activation='softmax'))
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adam', metrics=['accuracy'])
     model.fit(data.iloc[:, :-1], y, epochs=200, batch_size=512)
 
     last_date = df['date'].iloc[-1]
@@ -67,7 +69,7 @@ def windDir(location):
             if sample_p[i][j] == maxm:
                 index = j
         sample_pred[i] = index
-    
+
     directions = le_pred.inverse_transform(sample_pred)
     directions
     for i in range(len(directions)):
@@ -91,7 +93,7 @@ def windDir(location):
             directions[i] = np.random.randint(247.5, 292.5)
         elif directions[i] == 'NW':
             directions[i] = np.random.randint(292.5, 337.5)
-    
+
     pred_data = pd.DataFrame(
         columns=['date', 'direction', 'speed']
     )

@@ -39,7 +39,7 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     now = datetime.datetime.now()
     apiList, location = getData(latLng, start_datetimeObject)
     new = datetime.datetime.now()
-    print("\n\n\n\n\nTIME for getdata:", (new-now), "\n\n\n\n\n")
+    # print("\n\n\n\n\nTIME for getdata:", (new-now), "\n\n\n\n\n")
     array = []
     speedArray = []
     dateArray = []
