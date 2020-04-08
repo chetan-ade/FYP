@@ -15,7 +15,9 @@ DEFAULT_SEED = 20181108
 
 
 def set_up_figure(fig_size=(10, 5)):
+    img = plt.imread("static\map.png")
     fig, ax = plt.subplots(1, 1, figsize=fig_size)
+    ax.imshow(img, extent=[0, 100, -25, 25])
     title = ax.set_title('')
     # fig.axis('off')         # remove axes from plot
     return fig, ax, title
@@ -76,7 +78,7 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     # c = color
     ax.set_xlabel('x-coordinate / m')
     ax.set_ylabel('y-coordinate / m')
-    dayText = ax.text(84, 25, "DateTime")
+    dayText = ax.text(80, 22, "DateTime")
     ax.set_aspect(1)
     fig.tight_layout()
     @update_decorator(dt, title, steps_per_frame, [wind_model, plume_model])
@@ -97,6 +99,10 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
     anim.save("simulation.gif", PillowWriter(fps=15, bitrate=1800))      # GIF
     os.system("ffmpeg -i simulation.gif ./static/simulation.mp4 -loglevel quiet")
+    # ffmpeg -i in.mp4 -filter:v "crop=out_w:out_h:x:y" out.mp4
+    # os.system("ffmpeg -i simulation.gif ./static/temp.mp4 -loglevel quiet")
+    # os.system(
+    #     'ffmpeg -i ./static/temp.mp4 -filter:v "crop=843:425:103:17" ./static/simulation.mp4 -loglevel quiet')
     os.remove("simulation.gif")
     new = datetime.datetime.now()
     print("\n\n\n\n\nTIME:", (new-now), "\n\n\n\n\n")

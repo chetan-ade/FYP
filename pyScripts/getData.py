@@ -38,6 +38,18 @@ parameters = {
 }
 
 
+def getMap(location):
+    google_maps_api_key = "AIzaSyAqpHfAhTZPkSXc3Bs6dskNBv-GXIVOa2I"
+    ZOOM = 14
+    URL = "https://maps.googleapis.com/maps/api/staticmap?" + "center=" + \
+        location + "&zoom=" + str(ZOOM) + "&size=640x320 " + \
+        "&key=" + google_maps_api_key
+    response = requests.get(URL)
+    fileLocation = "static\map.png"
+    with open(fileLocation, 'wb') as imageFile:
+        imageFile.write(response.content)
+
+
 def getLocationName(location):
     parameters['q'] = location
     curDate = (datetime.datetime.today()).strftime('%Y-%m-%d')
@@ -50,6 +62,7 @@ def getLocationName(location):
 
 def getData(location, startDate):
     locationName = getLocationName(location)
+    getMap(location)
     filename = locationName+".csv"
     filepath = "dataFiles/"+filename
     if os.path.exists(filepath) == False:
