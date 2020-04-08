@@ -22,11 +22,12 @@ def disp_output():
 
     latLng = loc_lat+','+loc_lng
     print(latLng)
-    latLng = '21.238611,73.350000'  # Best Case
+    # latLng = '21.238611,73.350000'  # Best Case
     # latLng = '19.033000,73.029700'  # Worst Case
-    day = 2
-    month = 5
-    year = 2019
+    latLng = '37.4245,141.0298'  # Fukushima
+    day = 12
+    month = 3
+    year = 2011
 
     fig, ax, anim = simulate_plume_model(
         latLng=latLng, start_datetimeObject=datetime.datetime(year, month, day))

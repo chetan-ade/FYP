@@ -40,10 +40,11 @@ parameters = {
 
 def getMap(location):
     google_maps_api_key = "AIzaSyAqpHfAhTZPkSXc3Bs6dskNBv-GXIVOa2I"
-    ZOOM = 14
+    ZOOM = 4
     URL = "https://maps.googleapis.com/maps/api/staticmap?" + "center=" + \
-        location + "&zoom=" + str(ZOOM) + "&size=640x320 " + \
+        location + "&zoom=" + str(ZOOM) + "&scale=2" + "&maptype=roadmap"+"&size=640x320 " + \
         "&key=" + google_maps_api_key
+    #roadmap, satellite, terrain, hybrid
     response = requests.get(URL)
     fileLocation = "static\map.png"
     with open(fileLocation, 'wb') as imageFile:
@@ -90,3 +91,5 @@ def getData(location, startDate):
         element = {'Date': curDate, 'Direction': curDir, 'Speed': curSpd}
         apiList.append(element)
     return(apiList, location)
+
+# getMap('37.4245,141.0298')
