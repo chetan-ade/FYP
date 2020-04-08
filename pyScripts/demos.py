@@ -53,10 +53,11 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
 
     # array = [200, 192, 185, 213, 189, 194, 218,
     #          144, 180, 187, 246, 179, 255, 237, 199, 241]
-    # speedArray = [8, 10, 9, 9, 12, 8, 10, 9, 8, 9, 10, 10, 12, 12, 8, 9]
+    # speedArray = [10, 9, 11, 10, 18, 23, 14, 13, 10, 11, 6, 16, 9, 8, 20]
     # dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
     #              'Apr 04,2020', 'Apr 05,2020']
-
+    maxElement = max(speedArray)
+    speedArray = [(2*i)/maxElement for i in speedArray]
     rng = np.random.RandomState(seed)
     sim_region = Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
     wind_model = WindModel(

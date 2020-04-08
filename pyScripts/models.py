@@ -236,8 +236,8 @@ class WindModel(object):
         return tempAngleArray
 
     def createSpeedArray(self, speedArray):
-        mini = 0.75/min(speedArray)
-        speedArray = [i*mini for i in speedArray]
+        # mini = 0.75/max(speedArray)
+        # speedArray = [i*mini for i in speedArray]
         tempSpeedArray = []
         difference = 0
         for i in range(len(speedArray)-1):
