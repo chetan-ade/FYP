@@ -25,7 +25,7 @@
     text-align: center;
 }
 
-#predict{
+#predict {
     margin: 0;
     color: #fff;
     background: #16a085;
@@ -38,13 +38,15 @@
     border-bottom: 4px solid #117A60;
     transition: all .2s ease;
     outline: none;
-    }
-#predict:hover{
+}
+
+#predict:hover {
     background: #149174;
-        color: #0C5645;
-    }
-#predict:active{
-    border:0;
+    color: #0C5645;
+}
+
+#predict:active {
+    border: 0;
 }
 
 #demo,

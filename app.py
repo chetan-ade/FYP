@@ -19,15 +19,21 @@ def disp_output():
     loc = request.form['inputLoc']
     loc_lat = request.form['locLat']
     loc_lng = request.form['locLng']
-
+    date = request.form['dateInput']
     latLng = loc_lat+','+loc_lng
-    print(latLng)
+    day = date.split('/')[1]
+    month = date.split('/')[0]
+    year = date.split('/')[2]
+    print("Location: ", loc)
+    print("Coordinates: ", latLng)
+    print("Day:", day, "\nMonth:", month, "\nYear:", year)
+
     # latLng = '21.238611,73.350000'  # Best Case
     # latLng = '19.033000,73.029700'  # Worst Case
-    latLng = '37.4245,141.0298'  # Fukushima
-    day = 12
-    month = 3
-    year = 2011
+    # latLng = '37.4245,141.0298'  # Fukushima
+    # day = 12
+    # month = 3
+    # year = 2011
 
     fig, ax, anim = simulate_plume_model(
         latLng=latLng, start_datetimeObject=datetime.datetime(year, month, day))
