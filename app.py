@@ -21,9 +21,9 @@ def disp_output():
     loc_lng = request.form['locLng']
     date = request.form['dateInput']
     latLng = loc_lat+','+loc_lng
-    day = date.split('/')[1]
-    month = date.split('/')[0]
-    year = date.split('/')[2]
+    day = int(date.split('/')[1])
+    month = int(date.split('/')[0])
+    year = int(date.split('/')[2])
     print("Location: ", loc)
     print("Coordinates: ", latLng)
     print("Day:", day, "\nMonth:", month, "\nYear:", year)
