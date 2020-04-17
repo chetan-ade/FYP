@@ -9,11 +9,16 @@ from pyScripts.mlModels.data_collection import collect
 
 
 def getApiKey():
-    api_list = [['sifisel996@mailboxt.com', '8a8a662e947c4d8bb7a95716200104'],
-                ['noceb41307@mailboxt.com', '77d172a5ab384b0b889100954200104'],
-                ['rirake5230@smlmail.com',  'cced7653c5684a619c2101325200104'],
-                ['yiwov98027@mailboxt.com', 'd230320c4282460580d101501200104'],
-                ['locohed521@svpmail.com',  'ae8cb3f0c32b4b8e9d3101615200104']]
+    # api_list = [['sifisel996@mailboxt.com', '8a8a662e947c4d8bb7a95716200104'],
+    #             ['noceb41307@mailboxt.com', '77d172a5ab384b0b889100954200104'],
+    #             ['rirake5230@smlmail.com',  'cced7653c5684a619c2101325200104'],
+    #             ['yiwov98027@mailboxt.com', 'd230320c4282460580d101501200104'],
+    #             ['locohed521@svpmail.com',  'ae8cb3f0c32b4b8e9d3101615200104']]
+    api_list = [['sifisel996@mailboxt.com', '78dec329952f4b7387972337200104'],
+                ['noceb41307@mailboxt.com', '78dec329952f4b7387972337200104'],
+                ['rirake5230@smlmail.com',  '78dec329952f4b7387972337200104'],
+                ['yiwov98027@mailboxt.com', '78dec329952f4b7387972337200104'],
+                ['locohed521@svpmail.com',  '78dec329952f4b7387972337200104']]
     counterFile = open('.\dataFiles\counter.txt', 'r+')
     counter = int(counterFile.read())
     counterFile.seek(0)
