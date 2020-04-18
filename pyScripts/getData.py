@@ -69,9 +69,14 @@ def getLocationName(location):
     parameters['date'] = curDate
 
     r = requests.get(url=url, params=parameters)
+
     dataJson = r.json()
 
-    locationName = dataJson['data']['nearest_area'][0]['areaName'][0]['value']
+    try:
+        locationName = dataJson['data']['nearest_area'][0]['areaName'][0]['value']
+    except:
+        print("\n\n\nAPI not online...\nPress Ctrl + C to exit.\n\n\n")
+        exit()
 
     return locationName
 
