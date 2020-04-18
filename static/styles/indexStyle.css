@@ -49,15 +49,9 @@
     border: 0;
 }
 
-#demo,
-#demoOuter {
-    color: black;
-}
 
 #locateMe,
-#locateMe:hover,
-#showMap,
-#showMap:hover {
+#locateMe:hover {
     background-color: white;
     padding: 5px 10px 5px 10px;
     border-left: 0px;
@@ -76,26 +70,4 @@
     border-color: #6c757d;
     box-shadow: none;
     border-right: 0px;
-}
-
-#mapID {
-    margin-top: 5%;
-    width: 700px;
-    height: 300px;
-}
-
-#outerMapID {
-    padding-bottom: 10%;
-}
-
-.btn-primary,
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary:visited,
-.btn-primary:focus,
-.btn-primary:active:hover {
-    background-color: red !important;
-    border-color: red !important;
-    outline-color: red !important;
-    box-shadow: none !important;
 }
