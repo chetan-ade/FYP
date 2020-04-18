@@ -2,11 +2,13 @@ import os
 import requests
 from datetime import date
 from wwo_hist import retrieve_hist_data
-from pyScripts.mlModels.data_preprocessing import preprocessing
 from pyScripts.mlModels.windDir_NN import windDir
 from pyScripts.mlModels.windSpeed_SVR import windSpeed
+from pyScripts.mlModels.data_preprocessing import preprocessing
+
 
 def collect(location, api_key):
+
     api_key = api_key
     start_date = '01-JUL-2008'
     end_date = date.today().strftime("%d-%b-%Y").upper()

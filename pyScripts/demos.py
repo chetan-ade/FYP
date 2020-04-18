@@ -1,15 +1,14 @@
+import os
 import sys
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from matplotlib.animation import FuncAnimation, PillowWriter
-import numpy as np
-from pyScripts.models import Rectangle, WindModel, PlumeModel
-import pyScripts.processors
-from pyScripts.getData import getData
-# from pyScripts.getApiData import getData
 import datetime
 import matplotlib
-import os
+import numpy as np
+import matplotlib.cm as cm
+import pyScripts.processors
+import matplotlib.pyplot as plt
+from pyScripts.getData import getData
+from matplotlib.animation import FuncAnimation, PillowWriter
+from pyScripts.models import Rectangle, WindModel, PlumeModel
 
 DEFAULT_SEED = 20181108
 
@@ -17,9 +16,9 @@ DEFAULT_SEED = 20181108
 def set_up_figure(fig_size=(10, 5)):
     img = plt.imread("static\map.png")
     fig, ax = plt.subplots(1, 1, figsize=fig_size)
+
     ax.imshow(img, extent=[0, 100, -25, 25])
     title = ax.set_title('')
-    # fig.axis('off')         # remove axes from plot
     return fig, ax, title
 
 
@@ -29,8 +28,10 @@ def update_decorator(dt, title, steps_per_frame, models):
             for j in range(steps_per_frame):
                 for model in models:
                     model.update(dt)
+
             t = i * steps_per_frame * dt
             title.set_text('')
+
             return [title] + update_function(i)
         return wrapped_update
     return inner_decorator
@@ -39,123 +40,91 @@ def update_decorator(dt, title, steps_per_frame, models):
 def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
                          seed=DEFAULT_SEED, latLng='21.238611,73.350000', start_datetimeObject=datetime.datetime(2020, 1, 15)):
     now = datetime.datetime.now()
+
     apiList, location = getData(latLng, start_datetimeObject)
+
     new = datetime.datetime.now()
+
     print("\n\n\n\n\nTIME for getdata:", (new-now), "\n\n\n\n\n")
+
     array = []
     speedArray = []
     dateArray = []
+
     for i in apiList:
         array.append(int(i['Direction']))
         speedArray.append(int(float(i['Speed'])))
+
         d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
         dateArray.append(d.strftime('%b %d,%Y'))
 
-    # array = [200, 192, 185, 213, 189, 194, 218,
-    #          144, 180, 187, 246, 179, 255, 237, 199, 241]
-    # speedArray = [10, 9, 11, 10, 18, 23, 14, 13, 10, 11, 6, 16, 9, 8, 20]
-    # dateArray = ['Mar 21,2020', 'Mar 22,2020', 'Mar 23,2020', 'Mar 24,2020', 'Mar 25,2020', 'Mar 26,2020', 'Mar 27,2020', 'Mar 28,2020', 'Mar 29,2020', 'Mar 30,2020', 'Mar 31,2020', 'Apr 01,2020', 'Apr 02,2020', 'Apr 03,2020',
-    #              'Apr 04,2020', 'Apr 05,2020']
     maxElement = max(speedArray)
     speedArray = [(2*i)/maxElement for i in speedArray]
+
     rng = np.random.RandomState(seed)
+
     sim_region = Rectangle(x_min=0., x_max=100, y_min=-25., y_max=25.)
+
     wind_model = WindModel(
         sim_region, 21, 11, rng=rng, DirArray=array, SpdArray=speedArray, dateArray=dateArray)
+
     plume_model = PlumeModel(
         sim_region, wind_model=wind_model, rng=rng)
+
     fig, ax, title = set_up_figure()
+
     vf_plot = plt.quiver(
         wind_model.x_points, wind_model.y_points,
         wind_model.velocity_field.T[0], wind_model.velocity_field.T[1],
         width=0.000000000001)
-    # width = 0.003 for normal arrows, width = 0.000000000001 for jhugaad
+
     ax.axis(ax.axis() + np.array([-0.25, 0.25, -0.25, 0.25]))
     radius_mult = 200
+
     pp_plot = plt.scatter(
         plume_model.puff_array[:, 0], plume_model.puff_array[:, 1],
         radius_mult * plume_model.puff_array[:, 3]**0.5, c='r',
         edgecolors='none')
-    # c = color
+
     ax.set_xlabel('x-coordinate / m')
     ax.set_ylabel('y-coordinate / m')
+
     dayText = ax.text(80, 22, "DateTime")
+
     ax.set_aspect(1)
+
     fig.tight_layout()
+
     @update_decorator(dt, title, steps_per_frame, [wind_model, plume_model])
     def update(i):
         vf_plot.set_UVC(wind_model.velocity_field[:, :, 0].T,
                         wind_model.velocity_field[:, :, 1].T)
+
         pp_plot.set_offsets(plume_model.puff_array[:, :2])
         pp_plot._sizes = radius_mult * plume_model.puff_array[:, 3]**0.5
+
         dayText.set_text(wind_model.day)
+
         if(wind_model.counter > len(wind_model.newAngleArray)):
             anim.event_source.stop()
+
         percentage = min(
             round((100*wind_model.counter/len(wind_model.newAngleArray)), 1), 100.0)
+
         print("Loading: "+str(percentage)+"%")
+
         return [vf_plot, pp_plot, dayText]
 
     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
+
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
-    anim.save("simulation.gif", PillowWriter(fps=15, bitrate=1800))      # GIF
+    anim.save("simulation.gif", PillowWriter(fps=15, bitrate=1800))
+
     os.system("ffmpeg -i simulation.gif ./static/simulation.mp4 -loglevel quiet")
-    # ffmpeg -i in.mp4 -filter:v "crop=out_w:out_h:x:y" out.mp4
-    # os.system("ffmpeg -i simulation.gif ./static/temp.mp4 -loglevel quiet")
-    # os.system(
-    #     'ffmpeg -i ./static/temp.mp4 -filter:v "crop=843:425:103:17" ./static/simulation.mp4 -loglevel quiet')
+
     os.remove("simulation.gif")
+
     new = datetime.datetime.now()
     print("\n\n\n\n\nTIME:", (new-now), "\n\n\n\n\n")
 
     return fig, ax, anim
-
-# def conc_point_val_demo(dt=0.01, t_max=5, steps_per_frame=1, x=10., y=0.0,
-#                         seed=DEFAULT_SEED):
-#     rng = np.random.RandomState(seed)
-#     sim_region = models.Rectangle(
-#         x_min=0., x_max=100, y_min=-25., y_max=25.)
-#     wind_model = models.WindModel(sim_region, 21, 11, rng=rng)
-#     plume_model = models.PlumeModel(
-#         sim_region, (5., 0., 0.), wind_model, rng=rng)
-#     for t in np.arange(0, 10, dt):
-#         wind_model.update(dt)
-#         plume_model.update(dt)
-#     val_calc = processors.ConcentrationValueCalculator(1.)
-#     conc_vals = []
-#     conc_vals.append(val_calc.calc_conc_point(plume_model.puff_array, x, y))
-#     ts = [0.]
-#     fig, ax, title = set_up_figure()
-#     conc_line, = plt.plot(ts, conc_vals)
-#     ax.set_xlim(0., t_max)
-#     ax.set_ylim(0., 150.)
-#     ax.set_xlabel('Time / s')
-#     ax.set_ylabel('Normalised concentration')
-#     ax.grid(True)
-#     fig.tight_layout()
-#     @update_decorator(dt, title, steps_per_frame, [wind_model, plume_model])
-#     def update(i):
-#         ts.append(dt * i * steps_per_frame)
-#         conc_vals.append(
-#             val_calc.calc_conc_point(plume_model.puff_array, x, y))
-#         conc_line.set_data(ts, conc_vals)
-#         return [conc_line]
-#     n_frame = int(t_max / (dt * steps_per_frame) + 0.5)
-#     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
-#     return fig, ax, anim
-
-
-if __name__ == "__main__":
-    lat = input("Enter lat: ")
-    lng = input("Enter lng: ")
-    print("Date limit: 01-JUL-2008 to Today")
-    day = int(input("Enter Day: "))
-    month = int(input("Enter Month: "))
-    year = int(input("Enter Year: "))
-
-    latLng = lat + ',' + lng  # '19.0368,73.0158'
-    fig, ax, anim = simulate_plume_model(
-        latLng=latLng, start_datetimeObject=datetime.datetime(year, month, day))
-
-    # fig, ax, anim = conc_point_val_demo()
-    # plt.show()

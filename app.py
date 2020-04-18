@@ -45,8 +45,8 @@ def disp_output():
         os.remove(map_path)
 
     # Function to start simulation
-    # fig, ax, anim = simulate_plume_model(
-    #     latLng=latLng, start_datetimeObject=datetime.datetime(year, month, day))
+    fig, ax, anim = simulate_plume_model(
+        latLng=latLng, start_datetimeObject=datetime.datetime(year, month, day))
 
     # Rendering the output video
     return render_template('index.html', output_path=anim_path, visibility="visible")
