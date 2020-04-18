@@ -1,8 +1,6 @@
 import os
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from sklearn.svm import SVR
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder

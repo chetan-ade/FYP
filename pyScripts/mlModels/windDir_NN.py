@@ -2,12 +2,10 @@ import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Activation, Dense
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from tensorflow_core.python.keras.utils import np_utils
 import datetime
 from datetime import date
-
 
 def windDir(location):
     filename = location+"_preprocessed.csv"
