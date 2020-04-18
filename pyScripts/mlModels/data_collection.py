@@ -6,7 +6,6 @@ from pyScripts.mlModels.data_preprocessing import preprocessing
 from pyScripts.mlModels.windDir_NN import windDir
 from pyScripts.mlModels.windSpeed_SVR import windSpeed
 
-
 def collect(location, api_key):
     api_key = api_key
     start_date = '01-JUL-2008'
@@ -17,16 +16,15 @@ def collect(location, api_key):
         retrieve_hist_data(api_key, [location], start_date, end_date,
                            frequency, location_label=False, export_csv=True, store_df=False)
 
-    # location = '21.238611,73.350000'
     getHistoricalData(location)
 
     preprocessing(location)
-    print("Preprocessing completed!")
+    print("\n\n\n\nPreprocessing completed!\n\n")
 
-    print("Predicting wind direction...")
+    print("Predicting wind direction...\n\n\n\n")
     windDir(location)
-    print("Wind direction prediction completed!")
+    print("\n\n\n\nWind direction prediction completed!\n\n")
 
-    print("Predicting wind speed...")
+    print("Predicting wind speed...\n\n\n\n")
     windSpeed(location)
-    print("Wind speed prediction completed!")
+    print("\n\n\n\nWind speed prediction completed!\n\n")
