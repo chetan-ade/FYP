@@ -81,8 +81,8 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     radius_mult = 200
 
     pp_plot = plt.scatter(
-        plume_model.puff_array[:, 0], plume_model.puff_array[:, 1],
-        radius_mult * plume_model.puff_array[:, 3]**0.5, c='r',
+        plume_model.particle_array[:, 0], plume_model.particle_array[:, 1],
+        radius_mult * plume_model.particle_array[:, 3]**0.5, c='r',
         edgecolors='none')
 
     ax.set_xlabel('x-coordinate / m')
@@ -99,8 +99,8 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
         vf_plot.set_UVC(wind_model.velocity_field[:, :, 0].T,
                         wind_model.velocity_field[:, :, 1].T)
 
-        pp_plot.set_offsets(plume_model.puff_array[:, :2])
-        pp_plot._sizes = radius_mult * plume_model.puff_array[:, 3]**0.5
+        pp_plot.set_offsets(plume_model.particle_array[:, :2])
+        pp_plot._sizes = radius_mult * plume_model.particle_array[:, 3]**0.5
 
         dayText.set_text(wind_model.day)
 

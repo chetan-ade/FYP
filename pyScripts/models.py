@@ -17,7 +17,7 @@ class SlottedIterable(object):
                 name, getattr(self, name)) for name in self.__slots__]))
 
 
-class Puff(SlottedIterable):
+class Particle(SlottedIterable):
     __slots__ = ('x', 'y', 'z', 'r_sq')
 
     def __init__(self, x, y, z, r_sq):
@@ -61,8 +61,8 @@ class Rectangle(SlottedIterable):
 class PlumeModel(object):
     def __init__(self, sim_region=None, source_pos=(50., 0., 0.),
                  wind_model=None, model_z_disp=True, centre_rel_diff_scale=2.,
-                 puff_init_rad=0.0316, puff_spread_rate=0.001,
-                 puff_release_rate=10, init_num_puffs=10, max_num_puffs=1000,
+                 particle_init_rad=0.0316, particle_spread_rate=0.001,
+                 particle_release_rate=10, init_num_particles=10, max_num_particles=1000,
                  rng=None):
 
         if sim_region is None:
@@ -94,51 +94,53 @@ class PlumeModel(object):
 
         source_z = 0 if len(source_pos) != 3 else source_pos[2]
 
-        self._new_puff_params = (
-            source_pos[0], source_pos[1], source_z, puff_init_rad**2)
+        self._new_particle_params = (
+            source_pos[0], source_pos[1], source_z, particle_init_rad**2)
 
-        self.puff_spread_rate = puff_spread_rate
+        self.particle_spread_rate = particle_spread_rate
 
-        self.puff_release_rate = puff_release_rate
+        self.particle_release_rate = particle_release_rate
 
-        self.max_num_puffs = max_num_puffs
+        self.max_num_particles = max_num_particles
 
-        self.puffs = [
-            Puff(*self._new_puff_params) for i in range(init_num_puffs)]
+        # Self.particles is an array containing the active particles.
+        self.particles = [
+            Particle(*self._new_particle_params) for i in range(init_num_particles)]
 
     def update(self, dt):
-        if len(self.puffs) < self.max_num_puffs:
+        if len(self.particles) < self.max_num_particles:
             num_to_release = min(
-                self.rng.poisson(self.puff_release_rate * dt),
-                self.max_num_puffs - len(self.puffs))
+                self.rng.poisson(self.particle_release_rate * dt),
+                self.max_num_particles - len(self.particles))
 
-            self.puffs += [
-                Puff(*self._new_puff_params) for i in range(num_to_release)]
+            self.particles += [
+                Particle(*self._new_particle_params) for i in range(num_to_release)]
 
-        alive_puffs = []
+        alive_particles = []
 
-        for puff in self.puffs:
+        for particle in self.particles:
             wind_vel = np.zeros(self._vel_dim)
-            wind_vel[:2] = self.wind_model.velocity_at_pos(puff.x, puff.y)
+            wind_vel[:2] = self.wind_model.velocity_at_pos(
+                particle.x, particle.y)
 
             filament_diff_vel = (self.rng.normal(size=self._vel_dim) *
                                  self.centre_rel_diff_scale)
             vel = wind_vel + filament_diff_vel
 
-            puff.x += vel[0] * dt
-            puff.y += vel[1] * dt
+            particle.x += vel[0] * dt
+            particle.y += vel[1] * dt
 
             if self.model_z_disp:
-                puff.z += vel[2] * dt
-            puff.r_sq += self.puff_spread_rate * dt
+                particle.z += vel[2] * dt
+            particle.r_sq += self.particle_spread_rate * dt
 
-            if self.sim_region.contains(puff.x, puff.y):
-                alive_puffs.append(puff)
-        self.puffs = alive_puffs
+            if self.sim_region.contains(particle.x, particle.y):
+                alive_particles.append(particle)
+        self.particles = alive_particles
 
     @property
-    def puff_array(self):
-        return np.array([tuple(puff) for puff in self.puffs])
+    def particle_array(self):
+        return np.array([tuple(particle) for particle in self.particles])
 
 
 class WindModel(object):
