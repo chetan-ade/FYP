@@ -4,7 +4,6 @@ import datetime
 import matplotlib
 import numpy as np
 import matplotlib.cm as cm
-import pyScripts.processors
 import matplotlib.pyplot as plt
 from pyScripts.getData import getData
 from matplotlib.animation import FuncAnimation, PillowWriter
@@ -120,7 +119,11 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
     anim = FuncAnimation(fig, update, frames=n_frame, blit=True)
     anim.save("simulation.gif", PillowWriter(fps=15, bitrate=1800))
 
+    print("\nConverting simulation.gif to simulation.mp4...\n")
+
     os.system("ffmpeg -i simulation.gif ./static/simulation.mp4 -loglevel quiet")
+
+    print("\nDeleting simulation.gif...\n")
 
     os.remove("simulation.gif")
 
