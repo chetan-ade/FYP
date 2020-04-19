@@ -72,6 +72,8 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
 
     fig, ax, title = set_up_figure()
 
+    # Width = 0.03 to show arrows
+    # Width = 0.000000000001 to hide arrows
     vf_plot = plt.quiver(
         wind_model.x_points, wind_model.y_points,
         wind_model.velocity_field.T[0], wind_model.velocity_field.T[1],
