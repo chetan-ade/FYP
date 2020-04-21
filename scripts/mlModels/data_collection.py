@@ -2,9 +2,9 @@ import os
 import requests
 from datetime import date
 from wwo_hist import retrieve_hist_data
-from pyScripts.mlModels.windDir_NN import windDir
-from pyScripts.mlModels.windSpeed_SVR import windSpeed
-from pyScripts.mlModels.data_preprocessing import preprocessing
+from scripts.mlModels.windDir_NN import windDir
+from scripts.mlModels.windSpeed_SVR import windSpeed
+from scripts.mlModels.data_preprocessing import preprocessing
 
 
 def collect(location, api_key):

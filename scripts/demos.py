@@ -5,9 +5,9 @@ import matplotlib
 import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-from pyScripts.getData import getData
+from scripts.getData import getData
 from matplotlib.animation import FuncAnimation, PillowWriter
-from pyScripts.models import Rectangle, WindModel, PlumeModel
+from scripts.models import Rectangle, WindModel, PlumeModel
 
 DEFAULT_SEED = 20181108
 

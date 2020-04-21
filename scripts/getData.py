@@ -4,7 +4,7 @@ import requests
 import datetime
 from datetime import date
 from wwo_hist import retrieve_hist_data
-from pyScripts.mlModels.data_collection import collect
+from scripts.mlModels.data_collection import collect
 
 
 def getApiKey():

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from pyScripts.demos import simulate_plume_model
+from scripts.demos import simulate_plume_model
 from os import path
 import datetime
 import os
