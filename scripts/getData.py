@@ -20,7 +20,7 @@ def getApiKey():
                 ['yiwov98027@mailboxt.com', '78dec329952f4b7387972337200104'],
                 ['locohed521@svpmail.com',  '78dec329952f4b7387972337200104']]
 
-    counterFile = open('.\data\counter.txt', 'r+')
+    counterFile = open('.\data\others\counter.txt', 'r+')
     counter = int(counterFile.read())
 
     counterFile.seek(0)
@@ -56,7 +56,7 @@ def getMap(location):
         "&key=" + google_maps_api_key
 
     response = requests.get(URL)
-    fileLocation = "static\map.png"
+    fileLocation = "static\images\map.png"
 
     with open(fileLocation, 'wb') as imageFile:
         imageFile.write(response.content)

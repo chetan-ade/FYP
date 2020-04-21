@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from scripts.demos import simulate_plume_model
+from scripts.main import simulate_plume_model
 from os import path
 import datetime
 import os
@@ -8,10 +8,10 @@ import os
 app = Flask(__name__, static_folder='static')
 
 # Path to the final output video
-anim_path = 'static\simulation.mp4'
+anim_path = 'static\\videos\simulation.mp4'
 
 # Map used as simulation background
-map_path = 'static\map.png'
+map_path = 'static\images\map.png'
 
 # Rendering index.html on startup
 @app.route("/")

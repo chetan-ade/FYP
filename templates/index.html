@@ -10,7 +10,7 @@
     <title>Nuclear Fallout Radiation Prediction</title>
 
     <!-- INDEX CSS -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/indexStyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
 
     <!-- MARTEL FONT -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Martel&display=swap">
@@ -40,7 +40,7 @@
 
     <!-- INDEX BACKGROUND -->
     <video autoplay muted loop id="bgVideo">
-        <source src="{{url_for('static', filename='index.mp4')}}" type="video/mp4">
+        <source src="{{url_for('static', filename='videos/index.mp4')}}" type="video/mp4">
     </video>
 
     <div id="indexPageContent">
@@ -65,7 +65,7 @@
 
                     <button id="locateMe" class="btn btn-secondary" type="button" data-toggle="tooltip"
                         data-placement="bottom" title="Locate Me" onclick="getLocation()">
-                        <img src="../static/locateMe.png">
+                        <img src="../static/images/locateMe.png">
                     </button>
 
                 </div>

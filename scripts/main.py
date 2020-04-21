@@ -13,7 +13,7 @@ DEFAULT_SEED = 20181108
 
 
 def set_up_figure(fig_size=(10, 5)):
-    img = plt.imread("static\map.png")
+    img = plt.imread("static\images\map.png")
     fig, ax = plt.subplots(1, 1, figsize=fig_size)
 
     ax.imshow(img, extent=[0, 100, -25, 25])
@@ -123,7 +123,8 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
 
     print("\nConverting simulation.gif to simulation.mp4...\n")
 
-    os.system("ffmpeg -i simulation.gif ./static/simulation.mp4 -loglevel quiet")
+    os.system(
+        "ffmpeg -i simulation.gif ./static/videos/simulation.mp4 -loglevel quiet")
 
     print("\nDeleting simulation.gif...\n")
 
