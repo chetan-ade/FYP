@@ -127,6 +127,6 @@ def windDir(location):
     pred_data['direction'] = directions
 
     pred_filename = location+".csv"
-    filepath = "dataFiles/"+pred_filename
+    filepath = "data/"+pred_filename
 
     pred_data.to_csv(filepath, mode='a', header=False, index=False)

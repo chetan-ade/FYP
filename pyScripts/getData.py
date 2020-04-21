@@ -20,7 +20,7 @@ def getApiKey():
                 ['yiwov98027@mailboxt.com', '78dec329952f4b7387972337200104'],
                 ['locohed521@svpmail.com',  '78dec329952f4b7387972337200104']]
 
-    counterFile = open('.\dataFiles\counter.txt', 'r+')
+    counterFile = open('.\data\counter.txt', 'r+')
     counter = int(counterFile.read())
 
     counterFile.seek(0)
@@ -86,11 +86,11 @@ def getData(location, startDate):
     getMap(location)
 
     filename = locationName+".csv"
-    filepath = "dataFiles/"+filename
+    filepath = "data/"+filename
 
     if os.path.exists(filepath) == False:
         collect(location, api_key)
-        os.rename('dataFiles/'+location+'.csv', filepath)
+        os.rename('data/'+location+'.csv', filepath)
 
     startDateStr = startDate.strftime("%Y-%m-%d")
 
