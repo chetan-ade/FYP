@@ -1,5 +1,5 @@
 var y = document.getElementById("startInputText");
-var z;
+var temp;
 
 var startLat = undefined;
 var startLng = undefined;
@@ -68,7 +68,7 @@ function getLocation() {
 
 // Update the latitude longitude variables
 function showPosition(position) {
-    z = position.coords.latitude +
+    temp = position.coords.latitude +
         "," + position.coords.longitude;
     startLat = position.coords.latitude;
     startLng = position.coords.longitude;
@@ -104,7 +104,7 @@ function showError(error) {
 
 // Update Date input field with fetched location from Google Places API
 function GetAddress() {
-    var latlngStr = z.split(',', 2);
+    var latlngStr = temp.split(',', 2);
 
     var lat = parseFloat(latlngStr[0]);
     var lng = parseFloat(latlngStr[1]);

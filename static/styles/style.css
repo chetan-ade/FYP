@@ -25,7 +25,7 @@
     text-align: center;
 }
 
-#predict {
+#submitButton {
     margin: 0;
     color: #fff;
     background: #16a085;
@@ -40,15 +40,14 @@
     outline: none;
 }
 
-#predict:hover {
+#submitButton:hover {
     background: #149174;
     color: #0C5645;
 }
 
-#predict:active {
+#submitButton:active {
     border: 0;
 }
-
 
 #locateMe,
 #locateMe:hover {
@@ -58,13 +57,7 @@
     box-shadow: none;
 }
 
-#startInputText {
-    height: 50px;
-    border-color: #6c757d;
-    box-shadow: none;
-    border-right: 0px;
-}
-
+#startInputText,
 #startInputText:focus {
     height: 50px;
     border-color: #6c757d;
