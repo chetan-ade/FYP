@@ -144,10 +144,7 @@ class PlumeModel(object):
 
 
 class WindModel(object):
-    def __init__(self, sim_region=None, n_x=21, n_y=21, u_av=1., v_av=0.,
-                 k_x=20., k_y=20., noise_gain=2., noise_damp=0.1,
-                 noise_bandwidth=0.2, use_original_noise_updates=False,
-                 rng=None, DirArray=[], SpdArray=[], dateArray=[]):
+    def __init__(self, sim_region=None, n_x=21, n_y=21, u_av=1., v_av=0., rng=None, DirArray=[], SpdArray=[], dateArray=[]):
         if sim_region is None:
             sim_region = Rectangle(0, 100, -50, 50)
 
@@ -161,9 +158,6 @@ class WindModel(object):
 
         self.n_x = n_x
         self.n_y = n_y
-
-        self.k_x = k_x
-        self.k_y = k_y
 
         self.dx = sim_region.w / (n_x - 1)
         self.dy = sim_region.h / (n_y - 1)
@@ -262,6 +256,7 @@ class WindModel(object):
                         angleArray[i+1] += 360
 
         tempAngleArray = []
+
         for i in range(len(angleArray)-1):
             tempAngleArray.append(angleArray[i])
             difference = angleArray[i+1] - angleArray[i]
