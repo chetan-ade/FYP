@@ -57,6 +57,8 @@ def simulate_plume_model(dt=0.03, t_max=240, steps_per_frame=20,
         d = datetime.datetime.strptime(i['Date'], '%Y-%m-%d')
         dateArray.append(d.strftime('%b %d,%Y'))
 
+    print("Wind Direction:", array, "\n\nWind Speed:", speedArray, "\n")
+
     maxElement = max(speedArray)
     speedArray = [(2*i)/maxElement for i in speedArray]
 
