@@ -1,0 +1,9 @@
+Flask
+matplotlib
+scipy
+requests
+wwo_hist
+pandas
+scikit-learn
+Pillow
+tensorflow==2.0.0
