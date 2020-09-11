@@ -8,11 +8,11 @@ from scripts.mlModels.data_collection import collect
 
 
 def getApiKey():
-    api_list = [['speceki7301@agilekz.com', '306a1403311b490f8fa84305201406'],
-                ['xodaxox367@lefaqr5.com', 'd300f1d21fef42148e384613201406'],
-                ['wamot13082@klefv.com',  '6bd90d5cf75a462f83984731201406'],
-                ['voyamo7768@klefv.com', '9b4f0330bcc14d9b92484903201406'],
-                ['xefic38903@bewedfv.com',  'f6d2dd151cd84a4eb3b85116201406']]
+    api_list = [['weyeja9517@mailpkc.com', '3b460d8274364b33834151048201109'],
+                ['nejikox587@maileze.net', '9628cc3a00c249af860155134201109'],
+                ['cofox88589@mailpkc.com', '06802087188d44ab801155234201109'],
+                ['newig78670@mailetk.com', '477eb8464e8e45528a2155608201109'],
+                ['sayaka8725@oramail.net', 'd99a804d24d74b6795f160457201109']]
 
     counterFile = open('.\data\others\counter.txt', 'r+')
     counter = int(counterFile.read())
@@ -85,6 +85,8 @@ def getData(location, startDate):
     if os.path.exists(filepath) == False:
         collect(location, api_key)
         os.rename('data/'+location+'.csv', filepath)
+    else:
+        print("CSV File already present.")
 
     startDateStr = startDate.strftime("%Y-%m-%d")
 
