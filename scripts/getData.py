@@ -72,6 +72,7 @@ def getLocationName(location):
         print("\n\n\nAPI not online...\nPress Ctrl + C to exit.\n\n\n")
         exit()
 
+    print("Location Name:", locationName)
     return locationName
 
 
