@@ -3,6 +3,7 @@ matplotlib
 scipy
 requests
 wwo_hist
+numpy
 pandas
 scikit-learn
 Pillow
