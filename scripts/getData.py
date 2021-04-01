@@ -8,11 +8,11 @@ from scripts.mlModels.data_collection import collect
 
 
 def getApiKey():
-    api_list = [['weyeja9517@mailpkc.com', '3b460d8274364b33834151048201109'],
-                ['nejikox587@maileze.net', '9628cc3a00c249af860155134201109'],
-                ['cofox88589@mailpkc.com', '06802087188d44ab801155234201109'],
-                ['newig78670@mailetk.com', '477eb8464e8e45528a2155608201109'],
-                ['sayaka8725@oramail.net', 'd99a804d24d74b6795f160457201109']]
+    api_list = [['kojoh14199@whyflkj.com', '65095222dbbf417f816103233210104'],
+                ['todelov252@tlhao86.com', '6eb7e312d8514318b3b103604210104'],
+                ['goxof16510@yncyjs.com', '31f4cad110f149b1be6103738210104'],
+                ['sevena9477@shzsedu.com', 'cde978dfbd214661b4a103928210104'],
+                ['redacil278@yncyjs.com', '9093ef56a6094504911104051210104']]
 
     counterFile = open('.\data\others\counter.txt', 'r+')
     counter = int(counterFile.read())
